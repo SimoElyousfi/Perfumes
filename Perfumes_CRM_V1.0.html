@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EL MARROQUÍ Perfumes - Gestor de Stock</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        :root{
+            --primary-1: #5f6bf2;
+            --primary-2: #6f42c1;
+            --muted: #6c757d;
+            --card-bg: #ffffff;
+            --surface: #f6f8fb;
+            --accent: #d4af37;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+
+        /* Reset y base */
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+            -webkit-font-smoothing:antialiased;
+            background:var(--surface);
+            color:#222;
+            margin:0;
+            padding:0 0 64px; /* espacio para footer */
+        }
+
+        /* Header */
+        .topbar{
+            background: linear-gradient(135deg,#111 0%, #2b2b2b 100%);
+            color:var(--accent);
+            padding:.6rem .9rem;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:.5rem;
+            box-shadow:0 1px 3px rgba(0,0,0,.12);
+        }
+        .brand{font-weight:700; font-size:1rem; letter-spacing:.3px}
+        .tagline{font-size:.82rem; color:rgba(212,175,55,.95)}
+
+        /* Layout */
+        .container{max-width:980px; margin:12px auto; padding:0 14px}
+
+        /* Cards */
+        .card{
+            border-radius:10px;
+            border:0;
+            background:var(--card-bg);
+            box-shadow: 0 6px 18px rgba(20,24,40,.04);
+            margin-bottom:12px;
+            overflow:hidden;
+        }
+        .card-header{
+            padding:.6rem .85rem;
+            font-weight:600;
+            display:flex;
+            gap:.5rem;
+            align-items:center;
+            justify-content:space-between;
+        }
+        .card-body{padding:.75rem .85rem}
+
+        /* Compact buttons (elegant) */
+        .btn-compact{
+            padding:.36rem .6rem;
+            font-size:.92rem;
+            border-radius:8px;
+            line-height:1;
+            font-weight:600;
+        }
+
+        /* Icon button (square) */
+        .icon-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:36px;
+            height:36px;
+            padding:0;
+            border-radius:8px;
+            font-size:1rem;
+        }
+
+        /* Toggle small */
+        .toggle-small{
+            background:transparent;
+            border:1px solid rgba(255,255,255,.08);
+            color:#fff;
+            padding:.32rem .5rem;
+            border-radius:8px;
+            display:inline-flex;
+            gap:.35rem;
+            align-items:center;
+            font-size:.87rem;
+        }
+
+        /* Table for desktop */
+        .table thead th{vertical-align:middle}
+        .table td, .table th{white-space:nowrap; font-size:.92rem}
+        .table .btn{font-size:.82rem}
+
+        /* Mobile product card (elegant) - kept styles but we no longer generate them */
+        .producto-card{
+            display:flex;
+            gap:.6rem;
+            align-items:flex-start;
+            justify-content:space-between;
+            padding:.6rem;
+            border-radius:8px;
+            background:linear-gradient(180deg, #fff, #fff);
+            border:1px solid rgba(14,20,30,.03);
+        }
+        .producto-left{min-width:0; flex:1}
+        .producto-title{font-weight:700; font-size:.98rem; color:#111}
+        .producto-sub{font-size:.86rem; color:var(--muted); margin-top:.18rem}
+        .producto-meta{font-size:.88rem; color:#444; margin-top:.32rem}
+
+        /* Badges */
+        .badge-small{padding:.28rem .5rem; font-size:.88rem; border-radius:8px}
+
+        /* Colors for gains */
+        .gain-positive{color:var(--success); font-weight:600}
+        .gain-negative{color:var(--danger); font-weight:600}
+
+        /* Footer minimal */
+        footer{
+            background:#0f1720;
+            color:var(--accent);
+            text-align:center;
+            padding:.5rem 0;
+            position:fixed;
+            left:0;
+            right:0;
+            bottom:0;
+            font-size:.86rem;
+            box-shadow:0 -4px 18px rgba(11,14,20,.16);
+        }
+
+        /* Responsive: mobile-first focus on elegance */
+        @media (max-width: 767.98px){
+            .card-header h5{font-size:1rem; margin:0}
+            .form-control, .form-select, textarea{padding:.5rem .6rem; font-size:.95rem}
+            .btn-compact{padding:.38rem .5rem; font-size:.95rem}
+            .icon-btn{width:38px;height:38px;border-radius:10px}
+            .toggle-small{padding:.28rem .45rem; font-size:.86rem}
+            /* mostrar la tabla en móvil pero más compacta */
+            .table{
+              display: table;
+              font-size: .88rem;
+            }
+            .table td, .table th {
+              white-space: nowrap;
+              padding: .42rem .5rem; /* celdas más compactas para móvil */
+            }
+            .table-responsive {
+              overflow-x: auto;
+              -webkit-overflow-scrolling: touch; /* mejor scroll táctil */
+            }
+            .card{border-radius:12px}
+            /* smaller dashboard tiles */
+            .dashboard-tile{padding:.6rem .7rem}
+            .badge-small{font-size:.86rem}
+        }
+
+        @media (min-width: 768px){
+            /* desktop tweaks */
+            .toggle-small{background:transparent; border:0; color:#fff}
+            footer{position:fixed}
+            .table{display:table}
+        }
+
+        /* Columnas fijas en scroll horizontal */
+        .sticky-left {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            background: #fff;
+            min-width: 130px;
+            max-width: 190px;
+            white-space: normal !important;
+        }
+        thead .sticky-left {
+            background: #212529;
+            z-index: 3;
+        }
+        .table-hover tbody tr:hover .sticky-left {
+            background: #e8e8e8;
+        }
+
+        /* subtle focus */
+        .btn:focus, .form-control:focus, .form-select:focus{outline:none; box-shadow:0 0 0 4px rgba(95,107,242,.08)}
+
+        /* Sistema de pagos */
+        .pago-progress{height:6px; border-radius:4px; background:#e9ecef; margin-top:3px; overflow:hidden}
+        .pago-progress-bar{height:100%; border-radius:4px; transition:width .4s ease; background:linear-gradient(90deg,#28a745,#43f886)}
+        .pago-progress-bar.danger{background:linear-gradient(90deg,#dc3545,#ff6b6b)}
+        .pago-progress-bar.warning{background:linear-gradient(90deg,#ffc107,#ffda6a)}
+        .badge-pagado{background:#d4edda; color:#155724; font-size:.78rem; padding:.22rem .45rem; border-radius:6px; font-weight:600}
+        .badge-pendiente{background:#fff3cd; color:#856404; font-size:.78rem; padding:.22rem .45rem; border-radius:6px; font-weight:600}
+        .badge-sin-pago{background:#f8d7da; color:#721c24; font-size:.78rem; padding:.22rem .45rem; border-radius:6px; font-weight:600}
+        .abono-item{display:flex; justify-content:space-between; align-items:center; padding:.4rem .6rem; border-radius:8px; background:#f6f8fb; margin-bottom:.35rem; font-size:.9rem}
+        .abono-fecha{color:var(--muted); font-size:.8rem}
+        .abono-monto{font-weight:700; color:var(--success)}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="inventario-tab" data-bs-toggle="tab" data-bs-target="#inventario" type="button">📊 Inventario</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="productos-proveedor-tab" data-bs-toggle="tab" data-bs-target="#productos-proveedor" type="button">📦 Proveedores</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="mainTabsContent">
+            <!-- INVENTARIO -->
+            <div class="tab-pane fade show active" id="inventario" role="tabpanel">
+                <div class="row g-2 mb-3">
+                    <div class="col-6 col-md-3">
+                        <div class="card dashboard-tile bg-white" style="background: #ffc107 !important;">
+                            <div class="card-body p-2 text-muted">
+                                <div style="font-size:.78rem">📦 Productos</div>
+                                <div id="totalProductos" style="font-weight:700; font-size:1.05rem; color:#111">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card dashboard-tile" style="background: #dc3545 !important;">
+                            <div class="card-body p-2 text-muted">
+                                <div style="font-size:.78rem">💸 Inversión</div>
+                                <div id="inversionTotal" style="font-weight:700; font-size:1rem">₡0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card dashboard-tile" style="background: #23cd7e !important;">
+                            <div class="card-body p-2 text-muted">
+                                <div style="font-size:.78rem">🏷️ Valor venta</div>
+                                <div id="valorVenta" style="font-weight:700; font-size:1rem">₡0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card dashboard-tile" style="background: #0dcaf0 !important;">
+                            <div class="card-body p-2 text-muted">
+                                <div style="font-size:.78rem">📈 Ganancia</div>
+                                <div id="gananciaTotal" style="font-weight:700; font-size:1rem">₡0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card dashboard-tile" style="background: #28a745 !important; color:#fff">
+                            <div class="card-body p-2 text-muted">
+                                <div style="font-size:.78rem; color:rgba(255,255,255,.85)">💰 Cobrado</div>
+                                <div id="totalCobrado" style="font-weight:700; font-size:1rem; color:#fff">₡0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card dashboard-tile" style="background: #fd7e14 !important; color:#fff">
+                            <div class="card-body p-2 text-muted">
+                                <div style="font-size:.78rem; color:rgba(255,255,255,.85)">📉 Por cobrar</div>
+                                <div id="totalPorCobrar" style="font-weight:700; font-size:1rem; color:#fff">₡0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header bg-gradient d-flex align-items-center" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2))!important; color:#fff">
+                                <h5 class="mb-0">➕ Agregar Producto</h5>
+                                <button class="toggle-small ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFormProducto" aria-expanded="false" aria-controls="collapseFormProducto" title="Mostrar / Ocultar formulario">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </div>
+                            <div id="collapseFormProducto" class="collapse">
+                                <div class="card-body">
+                                    <form id="formProducto">
+                                        <div class="mb-2">
+                                            <label class="form-label small mb-1" for="nombreProducto">Nombre</label>
+                                            <input class="form-control" id="nombreProducto" placeholder="Ej: Perfume Oud Nobleza" required/>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small mb-1" for="proveedor">Proveedor</label>
+                                            <select id="proveedor" class="form-select" required>
+                                                <option value="">Selecciona un proveedor</option>
+                                                <option selected>Pura Vida</option>
+                                                <option>Salah Panama</option>
+                                            </select>
+                                        </div>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label class="form-label small mb-1" for="precioCompra">Precio compra (₡)</label>
+                                                <input class="form-control" id="precioCompra" type="number" step="0.01" placeholder="14000" required/>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small mb-1" for="precioVenta">Precio venta (₡)</label>
+                                                <input class="form-control" id="precioVenta" type="number" step="0.01" placeholder="20000" required/>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 mt-2">
+                                            <label class="form-label small mb-1" for="cantidad">Cantidad</label>
+                                            <input class="form-control" id="cantidad" type="number" value="1" min="1" required/>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-primary btn-compact w-100" type="submit">Agregar</button>
+                                            <button class="btn btn-outline-secondary btn-compact" type="button" onclick="document.getElementById('formProducto').reset()">Limpiar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Búsqueda -->
+                    <div class="col-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0">🔍 Búsqueda</h5>
+                                <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBusquedaFiltros" aria-expanded="false" aria-controls="collapseBusquedaFiltros" title="Mostrar / Ocultar filtros">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </div>
+                            <div id="collapseBusquedaFiltros" class="collapse">
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <label class="form-label small mb-1" for="buscar">Buscar</label>
+                                        <input id="buscar" class="form-control" placeholder="Nombre del producto..."/>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small mb-1" for="filtroProveedor">Proveedor</label>
+                                        <select id="filtroProveedor" class="form-select">
+                                            <option value="">Todos</option>
+                                            <option>Pura Vida</option>
+                                            <option>Salah Panama</option>
+                                        </select>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button id="btnLimpiarFiltros" class="btn btn-outline-danger btn-compact w-100">Limpiar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista / Tabla -->
+                <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-between" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
+                        <h5 class="mb-0">📊 Mis Productos</h5>
+                        <div class="d-flex align-items-center gap-2">
+                            <button id="btnExportar" class="btn btn-warning btn-compact" title="Exportar CSV">📤</button>
+                            <button id="btnImportar" class="btn btn-compact" title="Importar CSV" style="background: #43f886;">📥</button>
+                            <input type="file" id="inputImportar" accept=".csv" style="display:none"/>
+                            <button id="btnRecargar" class="btn btn-info btn-compact" title="Recargar datos">🔄</button>
+                            <button id="btnLimpiarTodo" class="btn btn-danger btn-compact" title="Limpiar todo">🗑</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Desktop & Mobile: responsive table visible on all sizes -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th><th class="sticky-left">Producto</th><th>Cant.</th><th>Venta</th><th>%</th><th>Gan.Total</th><th>💰 Pagos</th><th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTabla">
+                                    <tr><td colspan="10" class="text-center text-muted">No hay productos registrados</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Mobile list container left empty to avoid duplicates -->
+                        <div id="listaProductosMobile" class="d-block d-md-none"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROVEEDORES -->
+            <div class="tab-pane fade" id="productos-proveedor" role="tabpanel">
+                <div class="row g-2 mb-3">
+                    <div class="col-12 col-lg-8">
+                        <div class="card">
+                            <div class="card-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
+                                <div class="d-flex align-items-center justify-content-between w-100">
+                                    <h5 class="mb-0">📦 Registrar Producto del Proveedor</h5>
+                                    <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegistrarProv" aria-expanded="false" aria-controls="collapseRegistrarProv" title="Mostrar / Ocultar">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="collapseRegistrarProv" class="collapse">
+                                <div class="card-body">
+                                    <form id="formProductoProveedor">
+                                        <div class="mb-2">
+                                            <label class="form-label small mb-1">Proveedor</label>
+                                            <select id="proveedorProd" class="form-select" required>
+                                                <option value="">Selecciona un proveedor</option>
+                                                <option selected>Pura Vida</option>
+                                                <option>Salah Panama</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small mb-1">Nombre</label>
+                                            <input id="nombreProductoProv" class="form-control" required/>
+                                        </div>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label class="form-label small mb-1">Precio compra (₡)</label>
+                                                <input id="precioCostoProv" type="number" class="form-control" step="0.01" required/>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small mb-1">Precio venta (₡)</label>
+                                                <input id="precioVentaProv" class="form-control" type="number" step="0.01"/>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 mt-2">
+                                            <label class="form-label small mb-1">Descripción</label>
+                                            <textarea id="descripcionProv" class="form-control" rows="2"></textarea>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary btn-compact w-100">Registrar</button>
+                                            <button type="button" class="btn btn-outline-secondary btn-compact" onclick="document.getElementById('formProductoProveedor').reset()">Limpiar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-4">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0">🔍 Filtrar Base</h5>
+                                <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiltrarBD" aria-expanded="false" aria-controls="collapseFiltrarBD" title="Mostrar / Ocultar">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </div>
+                            <div id="collapseFiltrarBD" class="collapse">
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <label class="form-label small mb-1">Buscar</label>
+                                        <input id="buscarProv" class="form-control" placeholder="Nombre..."/>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small mb-1">Proveedor</label>
+                                        <select id="filtroProveedorProv" class="form-select">
+                                            <option value="">Todos</option>
+                                            <option>Pura Vida</option>
+                                            <option>Salah Panama</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <button id="btnLimpiarFiltrosProv" class="btn btn-outline-danger btn-compact w-100">Limpiar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
+                        <h5 class="mb-0">📦 Productos del Proveedores</h5>
+                        <div class="d-flex gap-2">
+                            <button id="btnExportarProv" class="btn btn-warning btn-compact" title="Exportar CSV">📤</button>
+                            <button id="btnImportarProv" class="btn btn-success btn-compact" title="Importar CSV" style="background: #43f886;">📥</button>
+                            <input type="file" id="inputImportarProv" accept=".csv" style="display:none"/>
+                            <button id="btnRecargarProv" class="btn btn-info btn-compact" title="Recargar datos">🔄</button>
+                            <button id="btnLimpiarTodoProv" class="btn btn-danger btn-compact" title="Limpiar datos">🗑</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Desktop & Mobile: responsive table visible on all sizes -->
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th><th>Proveedor</th><th class="sticky-left">Producto</th><th>Desc</th><th>Compra</th><th>Sugerido</th><th>Gan./u</th><th>%</th><th>Gan.Total</th><th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTablaProveedor">
+                                    <tr><td colspan="10" class="text-center text-muted">No hay productos registrados</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Mobile list container left empty to avoid duplicates -->
+                        <div id="listaProductosProveedorMobile" class="d-block d-md-none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales (sin cambios funcionales) -->
+    <div class="modal fade" id="modalEditar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
+                    <h5 class="modal-title">✏️ Editar Producto</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditar">
+                        <input type="hidden" id="idEditar"/>
+                        <div class="mb-2"><label class="form-label small">Nombre</label><input id="nombreEditar" class="form-control" required/></div>
+                        <div class="mb-2"><label class="form-label small">Proveedor</label>
+                            <select id="proveedorEditar" class="form-select" required>
+                                <option value="">Selecciona</option><option selected>Pura Vida</option><option>Salah Panama</option>
+                            </select>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6"><label class="form-label small">Precio Compra</label><input id="precioCompraEditar" type="number" class="form-control" step="0.01" required/></div>
+                            <div class="col-6"><label class="form-label small">Precio Venta sugerido</label><input id="precioVentaEditar" type="number" class="form-control" step="0.01" required/></div>
+                        </div>
+                        <div class="mb-2 mt-2"><label class="form-label small">Cantidad</label><input id="cantidadEditar" type="number" class="form-control" min="1" required/></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="btnGuardarEdicion" class="btn btn-primary btn-compact">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEditarProv" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
+                    <h5 class="modal-title">✏️ Editar Producto Proveedor</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarProv">
+                        <input type="hidden" id="idEditarProv"/>
+                        <div class="mb-2"><label class="form-label small">Proveedor</label>
+                            <select id="proveedorEditarProv" class="form-select" required><option value="">Selecciona</option><option selected>Pura Vida</option><option>Salah Panama</option></select>
+                        </div>
+                        <div class="mb-2"><label class="form-label small">Nombre</label><input id="nombreEditarProv" class="form-control" required/></div>
+                        <div class="row g-2">
+                            <div class="col-6"><label class="form-label small">Precio Compra</label><input id="precioCompraEditarProv" type="number" class="form-control" step="0.01" required/></div>
+                            <div class="col-6"><label class="form-label small">Precio Sugerido</label><input id="precioVentaEditarProv" type="number" class="form-control" step="0.01"/></div>
+                        </div>
+                        <div class="mb-2 mt-2"><label class="form-label small">Descripción</label><textarea id="descripcionEditarProv" class="form-control" rows="2"></textarea></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="btnGuardarEdicionProv" class="btn btn-primary btn-compact">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalUsarProducto" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
+                    <h5 class="modal-title">➕ Agregar a Mi Inventario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formUsarProducto">
+                        <input type="hidden" id="productoIdUsar"/>
+                        <div class="mb-2"><label class="form-label small">Producto</label><p id="productoNombreUsar" style="font-weight:700; margin:0">-</p></div>
+                        <div class="mb-2"><label class="form-label small">Proveedor</label><p id="productoProveedorUsar" style="margin:0; color:var(--muted)">-</p></div>
+                        <div class="mb-2"><label class="form-label small">Precio compra</label><p id="productoPrecioUsar" style="font-weight:700; color:var(--success); margin:0">₡0</p></div>
+                        <hr/>
+                        <div class="mb-2"><label class="form-label small">👤 Cliente</label><input id="clienteUsar" class="form-control" placeholder="Nombre del cliente (opcional)"/></div>
+                        <div class="row g-2">
+                            <div class="col-6"><label class="form-label small">Cantidad</label><input id="cantidadUsar" class="form-control" type="number" value="1" min="1" required/></div>
+                            <div class="col-6"><label class="form-label small">Precio venta sugerido</label><input id="precioVentaUsar" class="form-control" type="number" step="0.01" required/></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="btnConfirmarUsar" class="btn btn-success btn-compact">Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pagos -->
+    <div class="modal fade" id="modalPagos" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background:linear-gradient(135deg,#1a7f3c,#28a745); color:#fff">
+                    <h5 class="modal-title">💰 Pagos — <span id="pagosProductoNombre" style="font-weight:400; font-size:.95rem"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Resumen -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-4 text-center">
+                            <div style="font-size:.75rem; color:var(--muted)">Valor total</div>
+                            <div id="pagosValorTotal" style="font-weight:700; font-size:1rem; color:#111">₡0</div>
+                        </div>
+                        <div class="col-4 text-center">
+                            <div style="font-size:.75rem; color:var(--muted)">Pagado</div>
+                            <div id="pagosPagado" style="font-weight:700; font-size:1rem; color:var(--success)">₡0</div>
+                        </div>
+                        <div class="col-4 text-center">
+                            <div style="font-size:.75rem; color:var(--muted)">Restante</div>
+                            <div id="pagosRestante" style="font-weight:700; font-size:1rem; color:var(--danger)">₡0</div>
+                        </div>
+                    </div>
+                    <div class="pago-progress mb-3">
+                        <div id="pagosProgressBar" class="pago-progress-bar" style="width:0%"></div>
+                    </div>
+
+                    <!-- Registrar abono -->
+                    <div class="mb-3">
+                        <label class="form-label small mb-1 fw-semibold">💸 Registrar abono</label>
+                        <div class="d-flex gap-2">
+                            <input id="nuevoAbonoMonto" type="number" class="form-control" placeholder="Monto (₡)" min="1" step="1"/>
+                            <input id="nuevoAbonoNota" type="text" class="form-control" placeholder="Nota (opcional)"/>
+                            <button id="btnAgregarAbono" class="btn btn-success btn-compact" style="white-space:nowrap">+ Agregar</button>
+                        </div>
+                    </div>
+
+                    <!-- Historial de abonos -->
+                    <div style="font-size:.85rem; font-weight:600; color:#444; margin-bottom:.4rem">📋 Historial de abonos</div>
+                    <div id="listaAbonos">
+                        <div class="text-muted text-center" style="font-size:.88rem; padding:.6rem 0">Sin abonos registrados</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap + App JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variables globales (misma lógica que antes)
+        let productos = [];
+        let productosProveedor = [];
+        let idProducto = 1;
+        let idProductoProv = 1;
+
+        // Elementos
+        const formProducto = document.getElementById('formProducto');
+        const nombreProducto = document.getElementById('nombreProducto');
+        const proveedor = document.getElementById('proveedor');
+        const precioCompra = document.getElementById('precioCompra');
+        const precioVenta = document.getElementById('precioVenta');
+        const cantidad = document.getElementById('cantidad');
+        const cuerpoTabla = document.getElementById('cuerpoTabla');
+        const buscar = document.getElementById('buscar');
+        const filtroProveedor = document.getElementById('filtroProveedor');
+        const btnLimpiarFiltros = document.getElementById('btnLimpiarFiltros');
+        const btnExportar = document.getElementById('btnExportar');
+        const btnImportar = document.getElementById('btnImportar');
+        const inputImportar = document.getElementById('inputImportar');
+        const btnRecargar = document.getElementById('btnRecargar');
+        const btnLimpiarTodo = document.getElementById('btnLimpiarTodo');
+        const listaProductosMobile = document.getElementById('listaProductosMobile');
+
+        const formProductoProveedor = document.getElementById('formProductoProveedor');
+        const proveedorProd = document.getElementById('proveedorProd');
+        const nombreProductoProv = document.getElementById('nombreProductoProv');
+        const precioCostoProv = document.getElementById('precioCostoProv');
+        const precioVentaProv = document.getElementById('precioVentaProv');
+        const descripcionProv = document.getElementById('descripcionProv');
+        const cuerpoTablaProveedor = document.getElementById('cuerpoTablaProveedor');
+        const buscarProv = document.getElementById('buscarProv');
+        const filtroProveedorProv = document.getElementById('filtroProveedorProv');
+        const btnLimpiarFiltrosProv = document.getElementById('btnLimpiarFiltrosProv');
+        const btnExportarProv = document.getElementById('btnExportarProv');
+        const btnImportarProv = document.getElementById('btnImportarProv');
+        const inputImportarProv = document.getElementById('inputImportarProv');
+        const btnRecargarProv = document.getElementById('btnRecargarProv');
+        const btnLimpiarTodoProv = document.getElementById('btnLimpiarTodoProv');
+        const listaProductosProveedorMobile = document.getElementById('listaProductosProveedorMobile');
+
+        // Modales y botones
+        const modalEditar = new bootstrap.Modal(document.getElementById('modalEditar'));
+        const modalEditarProv = new bootstrap.Modal(document.getElementById('modalEditarProv'));
+        const modalUsarProducto = new bootstrap.Modal(document.getElementById('modalUsarProducto'));
+        const modalPagos = new bootstrap.Modal(document.getElementById('modalPagos'));
+        const btnGuardarEdicion = document.getElementById('btnGuardarEdicion');
+        const btnGuardarEdicionProv = document.getElementById('btnGuardarEdicionProv');
+        const btnConfirmarUsar = document.getElementById('btnConfirmarUsar');
+
+        // =========== PAGOS ===========
+        let pagosData = {}; // { productoId: [ {monto, nota, fecha} ] }
+        let pagoProductoActivoId = null;
+
+        // Formato colones
+        function formatoColones(numero){
+            return Number(numero).toLocaleString('es-CR',{minimumFractionDigits:0, maximumFractionDigits:0});
+        }
+
+        // cargar/guardar
+        function cargarDatos(){
+            const d = localStorage.getItem('productos');
+            const p = localStorage.getItem('productosProveedor');
+            const idP = localStorage.getItem('idProducto');
+            const idProv = localStorage.getItem('idProductoProv');
+            const pg = localStorage.getItem('pagosData');
+            if(d){ try { productos = JSON.parse(d) || []; } catch(e){ productos = []; } idProducto = parseInt(idP) || (productos.length? productos[productos.length-1].id + 1:1); }
+            if(p){ try { productosProveedor = JSON.parse(p) || []; } catch(e){ productosProveedor = []; } idProductoProv = parseInt(idProv) || (productosProveedor.length? productosProveedor[productosProveedor.length-1].id + 1:1); }
+            if(pg){ try { pagosData = JSON.parse(pg) || {}; } catch(e){ pagosData = {}; } }
+        }
+        function guardarDatos(){ localStorage.setItem('productos', JSON.stringify(productos)); localStorage.setItem('productosProveedor', JSON.stringify(productosProveedor)); localStorage.setItem('idProducto', String(idProducto)); localStorage.setItem('idProductoProv', String(idProductoProv)); localStorage.setItem('pagosData', JSON.stringify(pagosData)); }
+
+        // Inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarDatos();
+            actualizarDashboard();
+            renderizarTablas();
+            window.addEventListener('resize', () => { aplicarFiltros(); aplicarFiltrosProv(); });
+        });
+
+        // Agregar producto (inventario)
+        formProducto && formProducto.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!nombreProducto.value.trim() || !proveedor.value || !precioCompra.value || !precioVenta.value || !cantidad.value) { alert('Completa todos los campos'); return; }
+            const nuevo = { id: idProducto++, nombre: nombreProducto.value.trim(), proveedor: proveedor.value, precioCompra: parseFloat(precioCompra.value), precioVenta: parseFloat(precioVenta.value), cantidad: parseInt(cantidad.value) };
+            productos.push(nuevo); guardarDatos(); formProducto.reset(); cantidad.value='1'; actualizarDashboard(); renderizarTablas(); alert('✅ Agregado');
+        });
+
+        // Renderizado adaptativo (tabla + mobile cards) - mobile cards disabled to avoid duplicates
+        function renderizarTablas(filteredProd = null, filteredProv = null){
+            renderizarTabla(filteredProd || productos);
+            renderizarTablaProveedor(filteredProv || productosProveedor);
+        }
+
+        function renderizarTabla(list = productos){
+            // tabla (visible en móvil y desktop)
+            if(!Array.isArray(list) || list.length===0){
+                cuerpoTabla.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No hay productos registrados</td></tr>';
+            } else {
+                cuerpoTabla.innerHTML = list.map((p,i) => {
+                    const ganUnidad = p.precioVenta - p.precioCompra;
+                    const porc = (ganUnidad / p.precioCompra * 100).toFixed(2);
+                    const ganTotal = ganUnidad * p.cantidad;
+                    const cls = ganUnidad >= 0 ? 'gain-positive' : 'gain-negative';
+                    // Pagos
+                    const abonos = pagosData[p.id] || [];
+                    const totalPagado = abonos.reduce((s,a)=>s+a.monto,0);
+                    const valorTotal = p.precioVenta * p.cantidad;
+                    const restante = valorTotal - totalPagado;
+                    const pct = valorTotal > 0 ? Math.min(100, (totalPagado/valorTotal*100)) : 0;
+                    let badgeHtml, barCls;
+                    if(pct >= 100){ badgeHtml='<span class="badge-pagado">✅ Pagado</span>'; barCls=''; }
+                    else if(pct > 0){ badgeHtml='<span class="badge-pendiente">⏳ Parcial</span>'; barCls=' warning'; }
+                    else { badgeHtml='<span class="badge-sin-pago">❌ Sin pago</span>'; barCls=' danger'; }
+                    return `<tr>
+                        <td>${i+1}</td>
+                        <td class="sticky-left">
+                            <a href="https://www.google.com/search?q=${encodeURIComponent(p.nombre + ' site:essenzaperfumes.cr')}" target="_blank">
+                                <strong>${p.nombre}</strong>
+                            </a>${p.cliente ? ' <span style="color:var(--muted); font-size:.88rem"><br>' + p.cliente + '</span>' : ''}
+                        </td>
+                        <td><span class="badge bg-info badge-small">${p.cantidad}</span></td>
+                        <td>₡${formatoColones(p.precioVenta)}</td>
+                        <td class="${cls}">${porc}%</td>
+                        <td class="${cls}">₡${formatoColones(ganTotal)}</td>
+                        <td>
+                            <div style="min-width:110px">
+                                ${badgeHtml}
+                                <div class="pago-progress"><div class="pago-progress-bar${barCls}" style="width:${pct.toFixed(1)}%"></div></div>
+                                <div style="font-size:.76rem; color:var(--muted); margin-top:2px">₡${formatoColones(restante)} pendiente</div>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="abrirPagos(${p.id})" title="Pagos">💰</button>
+                            <button class="btn btn-sm btn-warning" onclick="abrirEditar(${p.id})">✏️</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${p.id})">🗑️</button>
+                        </td>
+                    </tr>` }).join('');
+            }
+
+            // NO generamos tarjetas móviles para evitar duplicados — dejamos el contenedor vacío
+            if (listaProductosMobile) listaProductosMobile.innerHTML = '';
+        }
+
+        // Renderizado de proveedores actualizado (incluye Gan./u, %, Gan.Total)
+        function renderizarTablaProveedor(list = productosProveedor){
+            if(!Array.isArray(list) || list.length===0){
+                cuerpoTablaProveedor.innerHTML = '<tr><td colspan="10" class="text-center text-muted">No hay productos registrados</td></tr>';
+            } else {
+                cuerpoTablaProveedor.innerHTML = list.map((p,i) => {
+                    const precioCompraRaw = Number(p.precioCompra || 0);
+                    const venta = Number(p.precioVentaSugerido || 0);
+                    const tieneVenta = venta > 0;
+                    const ganUnidad = tieneVenta ? (venta - precioCompraRaw) : 0;
+                    const porc = (precioCompraRaw && tieneVenta) ? ((ganUnidad / precioCompraRaw) * 100).toFixed(2) : '0.00';
+                    const ganTotal = tieneVenta ? ganUnidad : 0; // asumimos 1 unidad en la base proveedor
+                    const cls = tieneVenta && ganUnidad >= 0 ? 'gain-positive' : 'gain-negative';
+                    return `<tr>
+                        <td>${i+1}</td>
+                        <td><strong>${p.proveedor}</strong></td>
+                        <td class="sticky-left">
+                            <a href="https://www.google.com/search?q=${encodeURIComponent(p.nombre + ' site:essenzaperfumes.cr')}" target="_blank">
+                                <strong>${p.nombre}</strong>
+                            </a>
+                        </td>
+                        <td>${p.descripcion || '-'}</td>
+                        <td>₡${formatoColones(precioCompraRaw)}</td>
+                        <td>${tieneVenta ? '₡'+formatoColones(venta) : '-'}</td>
+                        <td class="${tieneVenta ? cls : ''}">${tieneVenta ? '₡'+formatoColones(ganUnidad) : '-'}</td>
+                        <td class="${tieneVenta ? cls : ''}">${tieneVenta ? porc+'%' : '-'}</td>
+                        <td class="${tieneVenta ? cls : ''}">${tieneVenta ? '₡'+formatoColones(ganTotal) : '-'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="abrirUsarProducto(${p.id})">➕ Usar</button>
+                            <button class="btn btn-sm btn-warning" onclick="abrirEditarProv(${p.id})">✏️</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarProductoProv(${p.id})">🗑️</button>
+                        </td>
+                    </tr>`;
+                }).join('');
+            }
+
+            // NO generamos tarjetas móviles para evitar duplicados — dejamos el contenedor vacío
+            if (listaProductosProveedorMobile) listaProductosProveedorMobile.innerHTML = '';
+        }
+
+        function abrirEditar(id){
+            const p = productos.find(x=>x.id===id);
+            if(!p) return;
+            document.getElementById('idEditar').value = p.id;
+            document.getElementById('nombreEditar').value = p.nombre;
+            document.getElementById('proveedorEditar').value = p.proveedor;
+            document.getElementById('precioCompraEditar').value = p.precioCompra;
+            document.getElementById('precioVentaEditar').value = p.precioVenta;
+            document.getElementById('cantidadEditar').value = p.cantidad;
+            modalEditar.show();
+        }
+        document.getElementById('btnGuardarEdicion').addEventListener('click', () => {
+            const id = parseInt(document.getElementById('idEditar').value);
+            const p = productos.find(x=>x.id===id);
+            if(p){
+                p.nombre = document.getElementById('nombreEditar').value.trim();
+                p.proveedor = document.getElementById('proveedorEditar').value;
+                p.precioCompra = parseFloat(document.getElementById('precioCompraEditar').value);
+                p.precioVenta = parseFloat(document.getElementById('precioVentaEditar').value);
+                p.cantidad = parseInt(document.getElementById('cantidadEditar').value);
+                guardarDatos(); actualizarDashboard(); renderizarTablas(); modalEditar.hide(); alert('✅ Actualizado');
+            }
+        });
+
+        function eliminarProducto(id){
+            if(confirm('¿Eliminar este producto?')){
+                productos = productos.filter(p=>p.id!==id); guardarDatos(); actualizarDashboard(); renderizarTablas(); alert('✅ Eliminado');
+            }
+        }
+
+        function actualizarDashboard(){
+            const total = productos.reduce((s,p)=>s + (p.cantidad||0),0);
+            const inversion = productos.reduce((s,p)=>s + ((p.precioCompra||0)*p.cantidad||0),0);
+            const valorVenta = productos.reduce((s,p)=>s + ((p.precioVenta||0)*p.cantidad||0),0);
+            const gananciaTotal = valorVenta - inversion;
+            // Pagos
+            const totalCobrado = productos.reduce((s,p)=>{ const abonos = pagosData[p.id]||[]; return s + abonos.reduce((a,b)=>a+b.monto,0); },0);
+            const totalPorCobrar = Math.max(0, valorVenta - totalCobrado);
+            document.getElementById('totalProductos').textContent = total;
+            document.getElementById('inversionTotal').textContent = '₡' + formatoColones(inversion);
+            document.getElementById('valorVenta').textContent = '₡' + formatoColones(valorVenta);
+            document.getElementById('gananciaTotal').textContent = '₡' + formatoColones(gananciaTotal);
+            document.getElementById('totalCobrado') && (document.getElementById('totalCobrado').textContent = '₡' + formatoColones(totalCobrado));
+            document.getElementById('totalPorCobrar') && (document.getElementById('totalPorCobrar').textContent = '₡' + formatoColones(totalPorCobrar));
+        }
+
+        // Filtros inventario
+        filtroProveedor && filtroProveedor.addEventListener('change', aplicarFiltros);
+        buscar && buscar.addEventListener('input', aplicarFiltros);
+
+        function aplicarFiltros(){
+            let res = productos.slice();
+            const q = (buscar.value || '').toLowerCase().trim();
+            if(q) res = res.filter(p => p.nombre.toLowerCase().includes(q));
+            const prov = filtroProveedor.value;
+            if(prov) res = res.filter(p => p.proveedor === prov);
+            renderizarTabla(res);
+        }
+
+        btnLimpiarFiltros && btnLimpiarFiltros.addEventListener('click', () => { if(buscar) buscar.value=''; if(filtroProveedor) filtroProveedor.value=''; renderizarTablas(); });
+
+        // -------------------------
+        // Mejora exportación CSV
+        // -------------------------
+        // Helpers para CSV (escapado RFC4180 y descarga con BOM para Sheets)
+        function csvEscape(value) {
+            if (value === null || value === undefined) return '';
+            const s = String(value);
+            if (s.includes('"') || s.includes(',') || s.includes('\n') || s.includes('\r')) {
+                return '"' + s.replace(/"/g, '""') + '"';
+            }
+            return s;
+        }
+
+        function downloadCsv(filename, content) {
+            // Añadimos BOM para asegurar que Google Sheets/Excel detecten UTF-8 correctamente
+            const bom = '\uFEFF';
+            const blob = new Blob([bom + content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Export inventario - formato amigable para Google Sheets (CRLF, números sin separadores)
+        btnExportar && btnExportar.addEventListener('click', () => {
+            if (!productos.length) { alert('No hay productos'); return; }
+
+            const headers = ['Producto', 'Proveedor', 'Cantidad', 'PrecioCompra', 'PrecioVenta', 'GananciaUnidad', '%Ganancia', 'GananciaTotal'];
+            const rows = [];
+            rows.push(headers.join(','));
+
+            productos.forEach(p => {
+                const precioCompraRaw = Number(p.precioCompra || 0);
+                const precioVentaRaw = Number(p.precioVenta || 0);
+                const cantidadRaw = Number(p.cantidad || 0);
+                const ganUnidad = precioVentaRaw - precioCompraRaw;
+                const porc = precioCompraRaw ? ((ganUnidad / precioCompraRaw) * 100).toFixed(2) : '0.00';
+                const ganTotal = ganUnidad * cantidadRaw;
+
+                const row = [
+                    csvEscape(p.nombre),
+                    csvEscape(p.proveedor),
+                    csvEscape(cantidadRaw),
+                    csvEscape(precioCompraRaw),
+                    csvEscape(precioVentaRaw),
+                    csvEscape(ganUnidad.toFixed(2)),
+                    csvEscape(porc),
+                    csvEscape(ganTotal.toFixed(2))
+                ].join(',');
+                rows.push(row);
+            });
+
+            const csv = rows.join('\r\n');
+            const filename = 'inventario_' + new Date().toISOString().slice(0,10) + '.csv';
+            downloadCsv(filename, csv);
+        });
+
+        // Import inventario desde CSV
+        btnImportar && btnImportar.addEventListener('click', () => inputImportar.click());
+        inputImportar && inputImportar.addEventListener('change', (e) => {
+            const file = e.target.files[0]; if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const text = ev.target.result.replace(/^\uFEFF/, ''); // quitar BOM
+                    const lines = text.split(/\r?\n/).filter(l => l.trim());
+                    if(lines.length < 2){ alert('CSV vacío o sin datos'); return; }
+                    const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+                    // Columnas esperadas: Producto,Proveedor,Cantidad,PrecioCompra,PrecioVenta,...
+                    const iNombre = header.indexOf('producto');
+                    const iProveedor = header.indexOf('proveedor');
+                    const iCantidad = header.indexOf('cantidad');
+                    const iCompra = header.indexOf('preciocompra');
+                    const iVenta = header.indexOf('precioventa');
+                    if(iNombre<0 || iProveedor<0 || iCantidad<0 || iCompra<0 || iVenta<0){
+                        alert('El CSV no tiene las columnas esperadas.\nNecesitas: Producto, Proveedor, Cantidad, PrecioCompra, PrecioVenta'); return;
+                    }
+                    const importados = [];
+                    for(let i=1; i<lines.length; i++){
+                        const cols = lines[i].split(',');
+                        const nombre = (cols[iNombre]||'').replace(/^"|"$/g,'').trim();
+                        if(!nombre) continue;
+                        importados.push({
+                            id: idProducto++,
+                            nombre,
+                            proveedor: (cols[iProveedor]||'').replace(/^"|"$/g,'').trim(),
+                            cantidad: parseInt(cols[iCantidad]) || 1,
+                            precioCompra: parseFloat(cols[iCompra]) || 0,
+                            precioVenta: parseFloat(cols[iVenta]) || 0
+                        });
+                    }
+                    if(!importados.length){ alert('No se encontraron filas válidas'); return; }
+                    if(confirm(`¿Importar ${importados.length} producto(s)? Se agregarán a los existentes.`)){
+                        productos = productos.concat(importados);
+                        guardarDatos(); actualizarDashboard(); renderizarTablas();
+                                            }
+                } catch(err){ alert('Error al leer el CSV: ' + err.message); }
+                inputImportar.value = '';
+            };
+            reader.readAsText(file, 'UTF-8');
+        });
+
+
+        btnRecargar && btnRecargar.addEventListener('click', () => {
+            cargarDatos();
+            actualizarDashboard();
+            renderizarTablas();
+            
+        });
+
+        btnLimpiarTodo && btnLimpiarTodo.addEventListener('click', () => {
+            if(confirm('¿Eliminar TODOS los productos?')){
+                productos=[]; idProducto=1; guardarDatos(); actualizarDashboard(); renderizarTablas();
+            }
+        });
+
+        // ========== PROVEEDORES ==========
+        formProductoProveedor && formProductoProveedor.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            if(!proveedorProd.value || !nombreProductoProv.value.trim() || !precioCostoProv.value){ alert('Completa'); return; }
+            const nuevo = { id: idProductoProv++, proveedor: proveedorProd.value, nombre: nombreProductoProv.value.trim(), precioCompra: parseFloat(precioCostoProv.value), precioVentaSugerido: parseFloat(precioVentaProv.value) || 0, descripcion: descripcionProv.value.trim() };
+            productosProveedor.push(nuevo); guardarDatos(); formProductoProveedor.reset(); renderizarTablas();
+        });
+
+        function abrirUsarProducto(id){
+            const p = productosProveedor.find(x=>x.id===id); if(!p) return;
+            document.getElementById('productoIdUsar').value = p.id;
+            document.getElementById('productoNombreUsar').textContent = p.nombre;
+            document.getElementById('productoProveedorUsar').textContent = p.proveedor;
+            document.getElementById('productoPrecioUsar').textContent = '₡' + formatoColones(p.precioCompra);
+            document.getElementById('cantidadUsar').value = '1';
+            document.getElementById('precioVentaUsar').value = p.precioVentaSugerido || '';
+            document.getElementById('clienteUsar').value = '';
+            modalUsarProducto.show();
+        }
+
+        btnConfirmarUsar && btnConfirmarUsar.addEventListener('click', () => {
+            const id = parseInt(document.getElementById('productoIdUsar').value);
+            const cant = parseInt(document.getElementById('cantidadUsar').value);
+            const pv = parseFloat(document.getElementById('precioVentaUsar').value);
+            const cliente = document.getElementById('clienteUsar').value.trim();
+            if(!cant || !pv){ alert('Completa'); return; }
+            const prov = productosProveedor.find(x=>x.id===id); if(!prov) return;
+            const nuevo = { id: idProducto++, nombre: prov.nombre, proveedor: prov.proveedor, precioCompra: prov.precioCompra, precioVenta: pv, cantidad: cant, cliente };
+            productos.push(nuevo); guardarDatos(); actualizarDashboard(); renderizarTablas(); modalUsarProducto.hide();
+        });
+
+        function abrirEditarProv(id){
+            const p = productosProveedor.find(x=>x.id===id); if(!p) return;
+            document.getElementById('idEditarProv').value = p.id;
+            document.getElementById('proveedorEditarProv').value = p.proveedor;
+            document.getElementById('nombreEditarProv').value = p.nombre;
+            document.getElementById('precioCompraEditarProv').value = p.precioCompra;
+            document.getElementById('precioVentaEditarProv').value = p.precioVentaSugerido;
+            document.getElementById('descripcionEditarProv').value = p.descripcion;
+            modalEditarProv.show();
+        }
+
+        btnGuardarEdicionProv && btnGuardarEdicionProv.addEventListener('click', () => {
+            const id = parseInt(document.getElementById('idEditarProv').value);
+            const p = productosProveedor.find(x=>x.id===id); if(p){
+                p.proveedor = document.getElementById('proveedorEditarProv').value;
+                p.nombre = document.getElementById('nombreEditarProv').value.trim();
+                p.precioCompra = parseFloat(document.getElementById('precioCompraEditarProv').value);
+                p.precioVentaSugerido = parseFloat(document.getElementById('precioVentaEditarProv').value) || 0;
+                p.descripcion = document.getElementById('descripcionEditarProv').value.trim();
+                guardarDatos(); renderizarTablas(); modalEditarProv.hide();            }
+        });
+
+        function eliminarProductoProv(id){
+            if(confirm('¿Eliminar este producto proveedor?')){ productosProveedor = productosProveedor.filter(p=>p.id!==id); guardarDatos(); renderizarTablas(); }
+        }
+
+        // filtros proveedor
+        filtroProveedorProv && filtroProveedorProv.addEventListener('change', aplicarFiltrosProv);
+        buscarProv && buscarProv.addEventListener('input', aplicarFiltrosProv);
+
+        function aplicarFiltrosProv(){
+            let res = productosProveedor.slice();
+            const q = (buscarProv.value||'').toLowerCase().trim();
+            if(q) res = res.filter(p => p.nombre.toLowerCase().includes(q));
+            const prov = filtroProveedorProv.value;
+            if(prov) res = res.filter(p => p.proveedor === prov);
+            renderizarTablaProveedor(res);
+        }
+
+        btnLimpiarFiltrosProv && btnLimpiarFiltrosProv.addEventListener('click', () => { if(buscarProv) buscarProv.value=''; if(filtroProveedorProv) filtroProveedorProv.value=''; renderizarTablas(); });
+
+        // Export proveedores mejorado (CRLF, BOM, escapado)
+        btnExportarProv && btnExportarProv.addEventListener('click', () => {
+            if (!productosProveedor.length) { return; }
+
+            const headers = ['Proveedor', 'Producto', 'Descripcion', 'PrecioCompra', 'PrecioVentaSugerido', 'GananciaUnidad', '%Ganancia', 'GananciaTotal'];
+            const rows = [];
+            rows.push(headers.join(','));
+
+            productosProveedor.forEach(p => {
+                const precioCompraRaw = Number(p.precioCompra || 0);
+                const precioSugeridoRaw = Number(p.precioVentaSugerido || 0);
+                const tieneVenta = precioSugeridoRaw > 0;
+                const ganUnidad = tieneVenta ? (precioSugeridoRaw - precioCompraRaw) : 0;
+                const porc = (precioCompraRaw && tieneVenta) ? ((ganUnidad / precioCompraRaw) * 100).toFixed(2) : '0.00';
+                const ganTotal = tieneVenta ? ganUnidad : 0;
+
+                const row = [
+                    csvEscape(p.proveedor),
+                    csvEscape(p.nombre),
+                    csvEscape(p.descripcion || ''),
+                    csvEscape(precioCompraRaw),
+                    csvEscape(precioSugeridoRaw),
+                    csvEscape(ganUnidad.toFixed(2)),
+                    csvEscape(porc),
+                    csvEscape(ganTotal.toFixed(2))
+                ].join(',');
+                rows.push(row);
+            });
+
+            const csv = rows.join('\r\n');
+            const filename = 'proveedores_' + new Date().toISOString().slice(0,10) + '.csv';
+            downloadCsv(filename, csv);
+        });
+
+        // Import proveedores desde CSV
+        btnImportarProv && btnImportarProv.addEventListener('click', () => inputImportarProv.click());
+        inputImportarProv && inputImportarProv.addEventListener('change', (e) => {
+            const file = e.target.files[0]; if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const text = ev.target.result.replace(/^\uFEFF/, '');
+                    const lines = text.split(/\r?\n/).filter(l => l.trim());
+                    if(lines.length < 2){ alert('CSV vacío o sin datos'); return; }
+                    const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+                    // Columnas esperadas: Proveedor,Producto,Descripcion,PrecioCompra,PrecioVentaSugerido,...
+                    const iProveedor = header.indexOf('proveedor');
+                    const iNombre = header.indexOf('producto');
+                    const iDesc = header.indexOf('descripcion');
+                    const iCompra = header.indexOf('preciocompra');
+                    const iSugerido = header.indexOf('precioventasugerido');
+                    if(iProveedor<0 || iNombre<0 || iCompra<0){
+                        alert('El CSV no tiene las columnas esperadas.\nNecesitas: Proveedor, Producto, PrecioCompra'); return;
+                    }
+                    const importados = [];
+                    for(let i=1; i<lines.length; i++){
+                        const cols = lines[i].split(',');
+                        const nombre = (cols[iNombre]||'').replace(/^"|"$/g,'').trim();
+                        if(!nombre) continue;
+                        importados.push({
+                            id: idProductoProv++,
+                            proveedor: (cols[iProveedor]||'').replace(/^"|"$/g,'').trim(),
+                            nombre,
+                            descripcion: iDesc>=0 ? (cols[iDesc]||'').replace(/^"|"$/g,'').trim() : '',
+                            precioCompra: parseFloat(cols[iCompra]) || 0,
+                            precioVentaSugerido: iSugerido>=0 ? (parseFloat(cols[iSugerido]) || 0) : 0
+                        });
+                    }
+                    if(!importados.length){ alert('No se encontraron filas válidas'); return; }
+                    if(confirm(`¿Importar ${importados.length} producto(s) de proveedor? Se agregarán a los existentes.`)){
+                        productosProveedor = productosProveedor.concat(importados);
+                        guardarDatos(); renderizarTablas(); actualizarDashboard();
+                        alert(`✅ ${importados.length} producto(s) de proveedor importados`);
+                    }
+                } catch(err){ alert('Error al leer el CSV: ' + err.message); }
+                inputImportarProv.value = '';
+            };
+            reader.readAsText(file, 'UTF-8');
+        });
+
+        // Nuevo: recargar proveedores desde localStorage
+        btnRecargarProv && btnRecargarProv.addEventListener('click', () => {
+            cargarDatos();
+            renderizarTablas();
+            actualizarDashboard();
+            alert('✅ Datos de proveedores recargados desde localStorage');
+        });
+
+        btnLimpiarTodoProv && btnLimpiarTodoProv.addEventListener('click', () => {
+            if(confirm('¿Eliminar TODOS los productos de proveedores?')){ productosProveedor=[]; idProductoProv=1; guardarDatos(); renderizarTablas(); alert('✅ Todos eliminados'); }
+        });
+
+        // util: inicializar renderizado
+        function renderizarTablasOnLoad(){ actualizarDashboard(); renderizarTablas(); }
+        // ya invocado en DOMContentLoaded al inicio
+
+        // ========== SISTEMA DE PAGOS ==========
+        function abrirPagos(id){
+            const p = productos.find(x=>x.id===id); if(!p) return;
+            pagoProductoActivoId = id;
+            document.getElementById('pagosProductoNombre').textContent = p.nombre + (p.cliente ? ' - ' + p.cliente : '');
+            document.getElementById('nuevoAbonoMonto').value = '';
+            document.getElementById('nuevoAbonoNota').value = '';
+            actualizarResumenPagos(p);
+            renderizarAbonos(p);
+            modalPagos.show();
+        }
+
+        function actualizarResumenPagos(p){
+            const abonos = pagosData[p.id] || [];
+            const totalPagado = abonos.reduce((s,a)=>s+a.monto,0);
+            const valorTotal = p.precioVenta * p.cantidad;
+            const restante = Math.max(0, valorTotal - totalPagado);
+            const pct = valorTotal > 0 ? Math.min(100, (totalPagado/valorTotal*100)) : 0;
+            document.getElementById('pagosValorTotal').textContent = '₡' + formatoColones(valorTotal);
+            document.getElementById('pagosPagado').textContent = '₡' + formatoColones(totalPagado);
+            document.getElementById('pagosRestante').textContent = '₡' + formatoColones(restante);
+            const bar = document.getElementById('pagosProgressBar');
+            bar.style.width = pct.toFixed(1) + '%';
+            bar.className = 'pago-progress-bar' + (pct>=100 ? '' : pct>0 ? ' warning' : ' danger');
+            // Actualizar límite del input y botón
+            const inputMonto = document.getElementById('nuevoAbonoMonto');
+            const btnAgregar = document.getElementById('btnAgregarAbono');
+            inputMonto.max = restante;
+            inputMonto.placeholder = restante > 0 ? `Máx: ₡${formatoColones(restante)}` : 'Deuda saldada';
+            if(restante <= 0){
+                inputMonto.disabled = true;
+                document.getElementById('nuevoAbonoNota').disabled = true;
+                btnAgregar.disabled = true;
+                btnAgregar.textContent = '✅ Saldado';
+            } else {
+                inputMonto.disabled = false;
+                document.getElementById('nuevoAbonoNota').disabled = false;
+                btnAgregar.disabled = false;
+                btnAgregar.textContent = '+ Agregar';
+            }
+        }
+
+        function renderizarAbonos(p){
+            const abonos = pagosData[p.id] || [];
+            const lista = document.getElementById('listaAbonos');
+            if(!abonos.length){
+                lista.innerHTML = '<div class="text-muted text-center" style="font-size:.88rem; padding:.6rem 0">Sin abonos registrados</div>';
+                return;
+            }
+            lista.innerHTML = abonos.map((a,i)=>`
+                <div class="abono-item">
+                    <div>
+                        <div class="abono-monto">₡${formatoColones(a.monto)}</div>
+                        ${a.nota ? `<div style="font-size:.82rem; color:#555">${a.nota}</div>` : ''}
+                        <div class="abono-fecha">${a.fecha}</div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" style="padding:.2rem .45rem; font-size:.8rem" onclick="eliminarAbono(${p.id},${i})">🗑️</button>
+                </div>`).join('');
+        }
+
+        document.getElementById('btnAgregarAbono') && document.getElementById('btnAgregarAbono').addEventListener('click', ()=>{
+            const monto = parseFloat(document.getElementById('nuevoAbonoMonto').value);
+            const nota = document.getElementById('nuevoAbonoNota').value.trim();
+            if(!monto || monto <= 0){ alert('Ingresa un monto válido'); return; }
+            // Calcular restante actual
+            const p = productos.find(x=>x.id===pagoProductoActivoId);
+            const abonos = pagosData[pagoProductoActivoId] || [];
+            const totalPagado = abonos.reduce((s,a)=>s+a.monto,0);
+            const valorTotal = p.precioVenta * p.cantidad;
+            const restante = valorTotal - totalPagado;
+            if(monto > restante){
+                alert(`⚠️ El abono (₡${formatoColones(monto)}) supera el monto restante (₡${formatoColones(restante)}).\nIngresa un monto menor o igual a ₡${formatoColones(restante)}.`);
+                document.getElementById('nuevoAbonoMonto').value = '';
+                document.getElementById('nuevoAbonoMonto').focus();
+                return;
+            }
+            if(!pagosData[pagoProductoActivoId]) pagosData[pagoProductoActivoId] = [];
+            const fecha = new Date().toLocaleDateString('es-CR', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+            pagosData[pagoProductoActivoId].push({ monto, nota, fecha });
+            guardarDatos();
+            actualizarResumenPagos(p);
+            renderizarAbonos(p);
+            renderizarTabla(productos);
+            actualizarDashboard();
+            document.getElementById('nuevoAbonoMonto').value='';
+            document.getElementById('nuevoAbonoNota').value='';
+        });
+
+        function eliminarAbono(productoId, index){
+            if(!confirm('¿Eliminar este abono?')) return;
+            if(pagosData[productoId]){ pagosData[productoId].splice(index,1); guardarDatos(); }
+            const p = productos.find(x=>x.id===productoId);
+            actualizarResumenPagos(p);
+            renderizarAbonos(p);
+            renderizarTabla(productos);
+        }
+    </script>
+</body>
+</html>
