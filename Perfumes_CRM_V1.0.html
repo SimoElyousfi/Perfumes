@@ -3,1415 +3,1750 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>EL MARROQUÍ Perfumes - Gestor de Stock</title>
+    <title>EL MARROQUÍ Perfumes — Gestor de Stock</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <style>
         :root{
-            --primary-1: #5f6bf2;
-            --primary-2: #6f42c1;
-            --muted: #6c757d;
-            --card-bg: #ffffff;
-            --surface: #f6f8fb;
-            --accent: #d4af37;
-            --success: #28a745;
-            --danger: #dc3545;
+            --primary-1:#5f6bf2;
+            --primary-2:#6f42c1;
+            --muted:#6c757d;
+            --card-bg:#ffffff;
+            --surface:#f6f8fb;
+            --accent:#d4af37;
+            --success:#28a745;
+            --danger:#dc3545;
         }
-
-        /* Reset y base */
         *{box-sizing:border-box}
         html,body{height:100%}
         body{
-            font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+            font-family:"Segoe UI",Tahoma,sans-serif;
             -webkit-font-smoothing:antialiased;
             background:var(--surface);
             color:#222;
             margin:0;
-            padding:0 0 64px; /* espacio para footer */
+            padding:0 0 64px;
         }
-
-        /* Header */
+        /* Topbar */
         .topbar{
-            background: linear-gradient(135deg,#111 0%, #2b2b2b 100%);
+            background:linear-gradient(135deg,#111 0%,#2b2b2b 100%);
             color:var(--accent);
             padding:.6rem .9rem;
             display:flex;
             align-items:center;
             justify-content:space-between;
             gap:.5rem;
-            box-shadow:0 1px 3px rgba(0,0,0,.12);
+            box-shadow:0 1px 3px rgba(0,0,0,.18);
+            margin-bottom:0;
         }
-        .brand{font-weight:700; font-size:1rem; letter-spacing:.3px}
-        .tagline{font-size:.82rem; color:rgba(212,175,55,.95)}
-
+        .brand{font-weight:700;font-size:1rem;letter-spacing:.3px}
+        .tagline{font-size:.82rem;color:rgba(212,175,55,.95)}
         /* Layout */
-        .container{max-width:980px; margin:12px auto; padding:0 14px}
-
+        .container{max-width:980px;margin:12px auto;padding:0 14px}
         /* Cards */
-        .card{
-            border-radius:10px;
-            border:0;
-            background:var(--card-bg);
-            box-shadow: 0 6px 18px rgba(20,24,40,.04);
-            margin-bottom:12px;
-            overflow:hidden;
-        }
-        .card-header{
-            padding:.6rem .85rem;
-            font-weight:600;
-            display:flex;
-            gap:.5rem;
-            align-items:center;
-            justify-content:space-between;
-        }
+        .card{border-radius:10px;border:0;background:var(--card-bg);box-shadow:0 6px 18px rgba(20,24,40,.04);margin-bottom:12px;overflow:hidden}
+        .card-header{padding:.6rem .85rem;font-weight:600;display:flex;gap:.5rem;align-items:center;justify-content:space-between}
         .card-body{padding:.75rem .85rem}
-
-        /* Compact buttons (elegant) */
-        .btn-compact{
-            padding:.36rem .6rem;
-            font-size:.92rem;
-            border-radius:8px;
-            line-height:1;
-            font-weight:600;
-        }
-
-        /* Icon button (square) */
-        .icon-btn{
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            width:36px;
-            height:36px;
-            padding:0;
-            border-radius:8px;
-            font-size:1rem;
-        }
-
-        /* Toggle small */
-        .toggle-small{
-            background:transparent;
-            border:1px solid rgba(255,255,255,.08);
-            color:#fff;
-            padding:.32rem .5rem;
-            border-radius:8px;
-            display:inline-flex;
-            gap:.35rem;
-            align-items:center;
-            font-size:.87rem;
-        }
-
-        /* Table for desktop */
+        .btn-compact{padding:.36rem .6rem;font-size:.92rem;border-radius:8px;line-height:1;font-weight:600}
+        .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border-radius:8px;font-size:1rem}
+        .toggle-small{background:transparent;border:1px solid rgba(255,255,255,.08);color:#fff;padding:.32rem .5rem;border-radius:8px;display:inline-flex;gap:.35rem;align-items:center;font-size:.87rem}
+        /* Table */
         .table thead th{vertical-align:middle}
-        .table td, .table th{white-space:nowrap; font-size:.92rem}
+        .table td,.table th{white-space:nowrap;font-size:.92rem}
         .table .btn{font-size:.82rem}
-
-        /* Mobile product card (elegant) - kept styles but we no longer generate them */
-        .producto-card{
-            display:flex;
-            gap:.6rem;
-            align-items:flex-start;
-            justify-content:space-between;
-            padding:.6rem;
-            border-radius:8px;
-            background:linear-gradient(180deg, #fff, #fff);
-            border:1px solid rgba(14,20,30,.03);
-        }
-        .producto-left{min-width:0; flex:1}
-        .producto-title{font-weight:700; font-size:.98rem; color:#111}
-        .producto-sub{font-size:.86rem; color:var(--muted); margin-top:.18rem}
-        .producto-meta{font-size:.88rem; color:#444; margin-top:.32rem}
-
-        /* Badges */
-        .badge-small{padding:.28rem .5rem; font-size:.88rem; border-radius:8px}
-
-        /* Colors for gains */
-        .gain-positive{color:var(--success); font-weight:600}
-        .gain-negative{color:var(--danger); font-weight:600}
-
-        /* Footer minimal */
-        footer{
-            background:#0f1720;
-            color:var(--accent);
-            text-align:center;
-            padding:.5rem 0;
-            position:fixed;
-            left:0;
-            right:0;
-            bottom:0;
-            font-size:.86rem;
-            box-shadow:0 -4px 18px rgba(11,14,20,.16);
-        }
-
-        /* Responsive: mobile-first focus on elegance */
-        @media (max-width: 767.98px){
-            .card-header h5{font-size:1rem; margin:0}
-            .form-control, .form-select, textarea{padding:.5rem .6rem; font-size:.95rem}
-            .btn-compact{padding:.38rem .5rem; font-size:.95rem}
-            .icon-btn{width:38px;height:38px;border-radius:10px}
-            .toggle-small{padding:.28rem .45rem; font-size:.86rem}
-            /* mostrar la tabla en móvil pero más compacta */
-            .table{
-              display: table;
-              font-size: .88rem;
-            }
-            .table td, .table th {
-              white-space: nowrap;
-              padding: .42rem .5rem; /* celdas más compactas para móvil */
-            }
-            .table-responsive {
-              overflow-x: auto;
-              -webkit-overflow-scrolling: touch; /* mejor scroll táctil */
-            }
+        /* Badges/gains */
+        .badge-small{padding:.28rem .5rem;font-size:.88rem;border-radius:8px}
+        .gain-positive{color:var(--success);font-weight:600}
+        .gain-negative{color:var(--danger);font-weight:600}
+        /* Footer */
+        footer{background:#0f1720;color:var(--accent);text-align:center;padding:.5rem 0;position:fixed;left:0;right:0;bottom:0;font-size:.86rem;box-shadow:0 -4px 18px rgba(11,14,20,.16)}
+        /* Responsive */
+        @media(max-width:767.98px){
+            .card-header h5{font-size:1rem;margin:0}
+            .form-control,.form-select,textarea{padding:.5rem .6rem;font-size:.95rem}
+            .btn-compact{padding:.38rem .5rem;font-size:.95rem}
+            .toggle-small{padding:.28rem .45rem;font-size:.86rem}
+            .table{display:table;font-size:.88rem}
+            .table td,.table th{white-space:nowrap;padding:.42rem .5rem}
+            .table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch}
             .card{border-radius:12px}
-            /* smaller dashboard tiles */
             .dashboard-tile{padding:.6rem .7rem}
             .badge-small{font-size:.86rem}
         }
-
-        @media (min-width: 768px){
-            /* desktop tweaks */
-            .toggle-small{background:transparent; border:0; color:#fff}
-            footer{position:fixed}
+        @media(min-width:768px){
+            .toggle-small{background:transparent;border:0;color:#fff}
             .table{display:table}
         }
-
-        /* Columnas fijas en scroll horizontal */
-        .sticky-left {
-            position: sticky;
-            left: 0;
-            z-index: 2;
-            background: #fff;
-            min-width: 130px;
-            max-width: 190px;
-            white-space: normal !important;
-        }
-        thead .sticky-left {
-            background: #212529;
-            z-index: 3;
-        }
-        .table-hover tbody tr:hover .sticky-left {
-            background: #e8e8e8;
-        }
-
-        /* subtle focus */
-        .btn:focus, .form-control:focus, .form-select:focus{outline:none; box-shadow:0 0 0 4px rgba(95,107,242,.08)}
-
-        /* Sortable headers */
-        #theadProv th[onclick]:hover, #theadInv th[onclick]:hover{background:rgba(255,255,255,.12); transition:background .15s}
-
-        /* Sistema de pagos */
-        .pago-progress{height:6px; border-radius:4px; background:#e9ecef; margin-top:3px; overflow:hidden}
-        .pago-progress-bar{height:100%; border-radius:4px; transition:width .4s ease; background:linear-gradient(90deg,#28a745,#43f886)}
+        /* Sticky column */
+        .sticky-left{position:sticky;left:0;z-index:2;background:#fff;min-width:130px;max-width:190px;white-space:normal !important}
+        thead .sticky-left{background:#212529;z-index:3}
+        .table-hover tbody tr:hover .sticky-left{background:#e8e8e8}
+        /* Focus */
+        .btn:focus,.form-control:focus,.form-select:focus{outline:none;box-shadow:0 0 0 4px rgba(95,107,242,.08)}
+        /* Sort headers */
+        #theadProv th[onclick]:hover,#theadInv th[onclick]:hover{background:rgba(255,255,255,.12);transition:background .15s}
+        /* Pagos */
+        .pago-progress{height:6px;border-radius:4px;background:#e9ecef;margin-top:3px;overflow:hidden}
+        .pago-progress-bar{height:100%;border-radius:4px;transition:width .4s ease;background:linear-gradient(90deg,#28a745,#43f886)}
         .pago-progress-bar.danger{background:linear-gradient(90deg,#dc3545,#ff6b6b)}
         .pago-progress-bar.warning{background:linear-gradient(90deg,#ffc107,#ffda6a)}
-        .badge-pagado{background:#d4edda; color:#155724; font-size:.78rem; padding:.22rem .45rem; border-radius:6px; font-weight:600}
-        .badge-pendiente{background:#fff3cd; color:#856404; font-size:.78rem; padding:.22rem .45rem; border-radius:6px; font-weight:600}
-        .badge-sin-pago{background:#f8d7da; color:#721c24; font-size:.78rem; padding:.22rem .45rem; border-radius:6px; font-weight:600}
-        .abono-item{display:flex; justify-content:space-between; align-items:center; padding:.4rem .6rem; border-radius:8px; background:#f6f8fb; margin-bottom:.35rem; font-size:.9rem}
-        .abono-fecha{color:var(--muted); font-size:.8rem}
-        .abono-monto{font-weight:700; color:var(--success)}
+        .badge-pagado{background:#d4edda;color:#155724;font-size:.78rem;padding:.22rem .45rem;border-radius:6px;font-weight:600}
+        .badge-pendiente{background:#fff3cd;color:#856404;font-size:.78rem;padding:.22rem .45rem;border-radius:6px;font-weight:600}
+        .badge-sin-pago{background:#f8d7da;color:#721c24;font-size:.78rem;padding:.22rem .45rem;border-radius:6px;font-weight:600}
+        .abono-item{display:flex;justify-content:space-between;align-items:center;padding:.4rem .6rem;border-radius:8px;background:#f6f8fb;margin-bottom:.35rem;font-size:.9rem}
+        .abono-fecha{color:var(--muted);font-size:.8rem}
+        .abono-monto{font-weight:700;color:var(--success)}
+        /* Toast container */
+        #toastContainer{position:fixed;bottom:70px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+        .toast-msg{background:#222;color:#fff;padding:.55rem 1rem;border-radius:10px;font-size:.9rem;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;pointer-events:none;max-width:320px}
+        .toast-msg.show{opacity:1;transform:translateY(0)}
+        .toast-msg.success{border-left:4px solid #28a745}
+        .toast-msg.danger{border-left:4px solid #dc3545}
+        .toast-msg.info{border-left:4px solid #17a2b8}
+        /* Compra procesada badge */
+        .badge-procesada{background:#cff4fc;color:#0c5460;font-size:.75rem;padding:.18rem .42rem;border-radius:5px;font-weight:600}
     </style>
 </head>
 <body>
-    <div class="container">
-        <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="inventario-tab" data-bs-toggle="tab" data-bs-target="#inventario" type="button">📊 Inventario</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="productos-proveedor-tab" data-bs-toggle="tab" data-bs-target="#productos-proveedor" type="button">📦 Proveedores</button>
-            </li>
-        </ul>
+<div class="container">
+    <ul class="nav nav-tabs mb-3 mt-2" id="mainTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="compras-tab" data-bs-toggle="tab" data-bs-target="#compras" type="button">🛒 Compras</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="inventario-tab" data-bs-toggle="tab" data-bs-target="#inventario" type="button">💰 Ventas</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="productos-proveedor-tab" data-bs-toggle="tab" data-bs-target="#productos-proveedor" type="button">📦 Proveedores</button>
+        </li>
+    </ul>
 
-        <div class="tab-content" id="mainTabsContent">
-            <!-- INVENTARIO -->
-            <div class="tab-pane fade show active" id="inventario" role="tabpanel">
-                <div class="row g-2 mb-3">
-                    <div class="col-6 col-md-3">
-                        <div class="card dashboard-tile" style="background:#FFDF20 !important;">
-                            <div class="card-body p-2">
-                                <div style="font-size:.78rem; color:#453e3e; font-weight:600">📦 Productos</div>
-                                <div id="totalProductos" style="font-weight:700; font-size:1.05rem; color:#2d3494">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="card dashboard-tile" style="background:#FB2C36 !important;">
-                            <div class="card-body p-2">
-                                <div style="font-size:.78rem; color:#453e3e; font-weight:600">💸 Inversión</div>
-                                <div id="inversionTotal" style="font-weight:700; font-size:1rem; color:#8c2233">₡0</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="card dashboard-tile" style="background:#51A2FF !important;">
-                            <div class="card-body p-2">
-                                <div style="font-size:.78rem; color:#453e3e; font-weight:600">🏷️ Valor venta</div>
-                                <div id="valorVenta" style="font-weight:700; font-size:1rem; color:#145c38">₡0</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="card dashboard-tile" style="background:#05DF72 !important;">
-                            <div class="card-body p-2">
-                                <div style="font-size:.78rem; color:#453e3e; font-weight:600">📈 Ganancia</div>
-                                <div id="gananciaTotal" style="font-weight:700; font-size:1rem; color:#085e74">₡0</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="card dashboard-tile" style="background:#05DF72 !important;">
-                            <div class="card-body p-2">
-                                <div style="font-size:.78rem; color:#453e3e; font-weight:600">💰 Cobrado</div>
-                                <div id="totalCobrado" style="font-weight:700; font-size:1rem; color:#1e5c10">₡0</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="card dashboard-tile" style="background:#FB2C36 !important;">
-                            <div class="card-body p-2">
-                                <div style="font-size:.78rem; color:#453e3e; font-weight:600">📉 Por cobrar</div>
-                                <div id="totalPorCobrar" style="font-weight:700; font-size:1rem; color:#7a420a">₡0</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="tab-content" id="mainTabsContent">
 
-                <div class="row g-2 mb-3">
-                    <div class="col-12 col-lg-6">
-                        <div class="card">
-                            <div class="card-header bg-gradient d-flex align-items-center" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2))!important; color:#fff">
-                                <h5 class="mb-0">➕ Agregar Producto</h5>
-                                <button class="toggle-small ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFormProducto" aria-expanded="false" aria-controls="collapseFormProducto" title="Mostrar / Ocultar formulario">
+        <!-- ===== COMPRAS ===== -->
+        <div class="tab-pane fade show active" id="compras" role="tabpanel">
+            <div class="row g-2 mb-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header" style="background:linear-gradient(135deg,#1a7f3c,#28a745);color:#fff">
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                                <h5 class="mb-0">🛒 Nueva Compra</h5>
+                                <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNuevaCompra">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
                             </div>
-                            <div id="collapseFormProducto" class="collapse">
-                                <div class="card-body">
-                                    <form id="formProducto">
-                                        <div class="mb-2">
-                                            <label class="form-label small mb-1" for="nombreProducto">Nombre</label>
-                                            <input class="form-control" id="nombreProducto" placeholder="Ej: Perfume Oud Nobleza" required/>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label small mb-1" for="proveedor">Proveedor</label>
-                                            <select id="proveedor" class="form-select" required>
-                                                <option value="">Selecciona un proveedor</option>
-                                                <option selected>Pura Vida</option>
-                                                <option>Pedro</option>
-                                            </select>
-                                        </div>
-                                        <div class="row g-2">
-                                            <div class="col-6">
-                                                <label class="form-label small mb-1" for="precioCompra">Precio compra (₡)</label>
-                                                <input class="form-control" id="precioCompra" type="number" step="0.01" placeholder="14000" required/>
-                                            </div>
-                                            <div class="col-6">
-                                                <label class="form-label small mb-1" for="precioVenta">Precio venta (₡)</label>
-                                                <input class="form-control" id="precioVenta" type="number" step="0.01" placeholder="20000" required/>
-                                            </div>
-                                        </div>
-                                        <div class="mb-2 mt-2">
-                                            <label class="form-label small mb-1" for="cantidad">Cantidad</label>
-                                            <input class="form-control" id="cantidad" type="number" value="1" min="1" required/>
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <button class="btn btn-primary btn-compact w-100" type="submit">Agregar</button>
-                                            <button class="btn btn-outline-secondary btn-compact" type="button" onclick="document.getElementById('formProducto').reset()">Limpiar</button>
-                                        </div>
-                                    </form>
+                        </div>
+                        <div id="collapseNuevaCompra" class="collapse show">
+                            <div class="card-body">
+                                <div class="d-flex gap-2 align-items-end">
+                                    <div class="flex-grow-1">
+                                        <label class="form-label small mb-1">Nombre de la Compra</label>
+                                        <input id="nombreNuevaCompra" class="form-control" placeholder="Ej: Compra Mayo 2025"/>
+                                    </div>
+                                    <button id="btnCrearCompra" class="btn btn-success btn-compact" style="white-space:nowrap">✅ Crear Compra</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Búsqueda -->
-                    <div class="col-12 col-lg-6">
-                        <div class="card">
-                            <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                                <h5 class="mb-0">🔍 Búsqueda</h5>
-                                <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBusquedaFiltros" aria-expanded="false" aria-controls="collapseBusquedaFiltros" title="Mostrar / Ocultar filtros">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                </button>
-                            </div>
-                            <div id="collapseBusquedaFiltros" class="collapse">
-                                <div class="card-body">
-                                    <div class="mb-2">
-                                        <label class="form-label small mb-1" for="buscar">Buscar</label>
-                                        <input id="buscar" class="form-control" placeholder="Nombre del producto..."/>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label small mb-1" for="filtroProveedor">Proveedor</label>
-                                        <select id="filtroProveedor" class="form-select">
-                                            <option value="">Todos</option>
-                                            <option>Pura Vida</option>
-                                            <option>Pedro</option>
-                                        </select>
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <button id="btnLimpiarFiltros" class="btn btn-outline-danger btn-compact w-100">Limpiar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Lista / Tabla -->
-                <div class="card">
-                    <div class="card-header d-flex align-items-center justify-content-between" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
-                        <h5 class="mb-0">📊 Mis Productos</h5>
-                        <div class="d-flex align-items-center gap-2">
-                            <button id="btnCompartirWhatsApp" class="btn btn-compact" title="Compartir lista por WhatsApp" style="background:#25D366; color:#fff; font-size:.85rem;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle; margin-right:2px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                            </button>
-                            <button id="btnExportar" class="btn btn-warning btn-compact" title="Exportar CSV">📤</button>
-                            <button id="btnImportar" class="btn btn-compact" title="Importar CSV" style="background: #43f886;">📥</button>
-                            <input type="file" id="inputImportar" accept=".csv" style="display:none"/>
-                            <button id="btnRecargar" class="btn btn-info btn-compact" title="Recargar datos">🔄</button>
-                            <button id="btnLimpiarTodo" class="btn btn-danger btn-compact" title="Limpiar todo">🗑</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <!-- Desktop & Mobile: responsive table visible on all sizes -->
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-dark">
-                                    <tr id="theadInv">
-                                        <th onclick="sortInv('#')" style="cursor:pointer;user-select:none" title="Ordenar por #"># <span id="sinv-#">⇅</span></th>
-                                        <th class="sticky-left" onclick="sortInv('nombre')" style="cursor:pointer;user-select:none" title="Ordenar por Producto">Producto <span id="sinv-nombre">⇅</span></th>
-                                        <th onclick="sortInv('cantidad')" style="cursor:pointer;user-select:none" title="Ordenar por Cantidad">Cant. <span id="sinv-cantidad">⇅</span></th>
-                                        <th onclick="sortInv('precioVenta')" style="cursor:pointer;user-select:none" title="Ordenar por Venta">Venta <span id="sinv-precioVenta">⇅</span></th>
-                                        <th onclick="sortInv('porc')" style="cursor:pointer;user-select:none" title="Ordenar por %">% <span id="sinv-porc">⇅</span></th>
-                                        <th onclick="sortInv('ganTotal')" style="cursor:pointer;user-select:none" title="Ordenar por Gan.Total">Gan.Total <span id="sinv-ganTotal">⇅</span></th>
-                                        <th onclick="sortInv('pagado')" style="cursor:pointer;user-select:none" title="Ordenar por Pagos">💰 Pagos <span id="sinv-pagado">⇅</span></th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cuerpoTabla">
-                                    <tr><td colspan="10" class="text-center text-muted">No hay productos registrados</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Mobile list container left empty to avoid duplicates -->
-                        <div id="listaProductosMobile" class="d-block d-md-none"></div>
                     </div>
                 </div>
             </div>
-
-            <!-- PROVEEDORES -->
-            <div class="tab-pane fade" id="productos-proveedor" role="tabpanel">
-                <div class="row g-2 mb-3">
-                    <div class="col-12 col-lg-8">
-                        <div class="card">
-                            <div class="card-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
-                                <div class="d-flex align-items-center justify-content-between w-100">
-                                    <h5 class="mb-0">📦 Registrar Producto del Proveedor</h5>
-                                    <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegistrarProv" aria-expanded="false" aria-controls="collapseRegistrarProv" title="Mostrar / Ocultar">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="collapseRegistrarProv" class="collapse">
-                                <div class="card-body">
-                                    <form id="formProductoProveedor">
-                                        <div class="mb-2">
-                                            <label class="form-label small mb-1">Proveedor</label>
-                                            <select id="proveedorProd" class="form-select" required>
-                                                <option value="">Selecciona un proveedor</option>
-                                                <option selected>Pura Vida</option>
-                                                <option>Pedro</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label small mb-1">Nombre</label>
-                                            <input id="nombreProductoProv" class="form-control" required/>
-                                        </div>
-                                        <div class="row g-2">
-                                            <div class="col-6">
-                                                <label class="form-label small mb-1">Precio compra (₡)</label>
-                                                <input id="precioCostoProv" type="number" class="form-control" step="0.01" required/>
-                                            </div>
-                                            <div class="col-6">
-                                                <label class="form-label small mb-1">Precio venta (₡)</label>
-                                                <input id="precioVentaProv" class="form-control" type="number" step="0.01"/>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-2 mt-2">
-                                            <button type="submit" class="btn btn-primary btn-compact w-100">Registrar</button>
-                                            <button type="button" class="btn btn-outline-secondary btn-compact" onclick="document.getElementById('formProductoProveedor').reset()">Limpiar</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+            <div class="row g-2">
+                <div class="col-12 col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff">
+                            <h5 class="mb-0">📋 Mis Compras</h5>
                         </div>
-                    </div>
-
-                    <div class="col-12 col-lg-4">
-                        <div class="card">
-                            <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                                <h5 class="mb-0">🔍 Filtrar Base</h5>
-                                <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiltrarBD" aria-expanded="false" aria-controls="collapseFiltrarBD" title="Mostrar / Ocultar">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                </button>
-                            </div>
-                            <div id="collapseFiltrarBD" class="collapse">
-                                <div class="card-body">
-                                    <div class="mb-2">
-                                        <label class="form-label small mb-1">Buscar</label>
-                                        <input id="buscarProv" class="form-control" placeholder="Nombre..."/>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="form-label small mb-1">Proveedor</label>
-                                        <select id="filtroProveedorProv" class="form-select">
-                                            <option value="">Todos</option>
-                                            <option>Pura Vida</option>
-                                            <option>Pedro</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <button id="btnLimpiarFiltrosProv" class="btn btn-outline-danger btn-compact w-100">Limpiar</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="card-body p-2" id="listaCompras" style="min-height:200px">
+                            <div class="text-muted text-center" style="padding:1rem;font-size:.9rem">Sin compras creadas</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
-                        <h5 class="mb-0">📦 Productos del Proveedores</h5>
-                        <div class="d-flex gap-2">
-                            <button id="btnExportarProv" class="btn btn-warning btn-compact" title="Exportar CSV">📤</button>
-                            <button id="btnImportarProv" class="btn btn-success btn-compact" title="Importar CSV" style="background: #43f886;">📥</button>
-                            <input type="file" id="inputImportarProv" accept=".csv" style="display:none"/>
-                            <button id="btnRecargarProv" class="btn btn-info btn-compact" title="Recargar datos">🔄</button>
-                            <button id="btnLimpiarTodoProv" class="btn btn-danger btn-compact" title="Limpiar datos">🗑</button>
+                <div class="col-12 col-md-8">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff">
+                            <h5 class="mb-0" id="tituloCompraActiva">🛒 Selecciona una compra</h5>
+                            <span id="fichaCompraActiva" style="font-size:.82rem;opacity:.8"></span>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <!-- Desktop & Mobile: responsive table visible on all sizes -->
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead class="table-dark">
-                                    <tr id="theadProv">
-                                        <th onclick="sortProv('#')" style="cursor:pointer;user-select:none" title="Ordenar por #"># <span id="sort-#">⇅</span></th>
-                                        <th onclick="sortProv('proveedor')" style="cursor:pointer;user-select:none" title="Ordenar por Proveedor">Proveedor <span id="sort-proveedor">⇅</span></th>
-                                        <th class="sticky-left" onclick="sortProv('nombre')" style="cursor:pointer;user-select:none" title="Ordenar por Producto">Producto <span id="sort-nombre">⇅</span></th>
-                                        <th onclick="sortProv('precioCompra')" style="cursor:pointer;user-select:none" title="Ordenar por Compra">Compra <span id="sort-precioCompra">⇅</span></th>
-                                        <th onclick="sortProv('precioVentaSugerido')" style="cursor:pointer;user-select:none" title="Ordenar por Sugerido">Sugerido <span id="sort-precioVentaSugerido">⇅</span></th>
-                                        <th onclick="sortProv('ganUnidad')" style="cursor:pointer;user-select:none" title="Ordenar por Gan./u">Gan./u <span id="sort-ganUnidad">⇅</span></th>
-                                        <th onclick="sortProv('porc')" style="cursor:pointer;user-select:none" title="Ordenar por %">% <span id="sort-porc">⇅</span></th>
-                                        <th onclick="sortProv('ganTotal')" style="cursor:pointer;user-select:none" title="Ordenar por Gan.Total">Gan.Total <span id="sort-ganTotal">⇅</span></th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cuerpoTablaProveedor">
-                                    <tr><td colspan="10" class="text-center text-muted">No hay productos registrados</td></tr>
-                                </tbody>
-                            </table>
+                        <div class="card-body p-2">
+                            <div id="detalleCompraActiva">
+                                <div class="text-muted text-center" style="padding:2rem;font-size:.9rem">👈 Selecciona una compra de la lista</div>
+                            </div>
                         </div>
-
-                        <!-- Mobile list container left empty to avoid duplicates -->
-                        <div id="listaProductosProveedorMobile" class="d-block d-md-none"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modales (sin cambios funcionales) -->
-    <div class="modal fade" id="modalEditar" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
-                    <h5 class="modal-title">✏️ Editar Producto</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <!-- ===== VENTAS ===== -->
+        <div class="tab-pane fade" id="inventario" role="tabpanel">
+            <!-- Dashboard -->
+            <div class="row g-2 mb-3">
+                <div class="col-6 col-md-3">
+                    <div class="card dashboard-tile" style="background:#FFDF20 !important">
+                        <div class="card-body p-2">
+                            <div style="font-size:.78rem;color:#453e3e;font-weight:600">📦 Productos</div>
+                            <div id="totalProductos" style="font-weight:700;font-size:1.05rem;color:#2d3494">0</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form id="formEditar">
-                        <input type="hidden" id="idEditar"/>
-                        <div class="mb-2"><label class="form-label small">Nombre</label><input id="nombreEditar" class="form-control" required/></div>
-                        <div class="mb-2"><label class="form-label small">Proveedor</label>
-                            <select id="proveedorEditar" class="form-select" required>
-                                <option value="">Selecciona</option><option selected>Pura Vida</option><option>Pedro</option>
+                <div class="col-6 col-md-3">
+                    <div class="card dashboard-tile" style="background:#FB2C36 !important">
+                        <div class="card-body p-2">
+                            <div style="font-size:.78rem;color:#453e3e;font-weight:600">💸 Inversión</div>
+                            <div id="inversionTotal" style="font-weight:700;font-size:1rem;color:#8c2233">₡0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card dashboard-tile" style="background:#51A2FF !important">
+                        <div class="card-body p-2">
+                            <div style="font-size:.78rem;color:#453e3e;font-weight:600">🏷️ Valor venta</div>
+                            <div id="valorVenta" style="font-weight:700;font-size:1rem;color:#145c38">₡0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card dashboard-tile" style="background:#05DF72 !important">
+                        <div class="card-body p-2">
+                            <div style="font-size:.78rem;color:#453e3e;font-weight:600">📈 Ganancia</div>
+                            <div id="gananciaTotal" style="font-weight:700;font-size:1rem;color:#085e74">₡0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card dashboard-tile" style="background:#05DF72 !important">
+                        <div class="card-body p-2">
+                            <div style="font-size:.78rem;color:#453e3e;font-weight:600">💰 Cobrado</div>
+                            <div id="totalCobrado" style="font-weight:700;font-size:1rem;color:#1e5c10">₡0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card dashboard-tile" style="background:#FB2C36 !important">
+                        <div class="card-body p-2">
+                            <div style="font-size:.78rem;color:#453e3e;font-weight:600">📉 Por cobrar</div>
+                            <div id="totalPorCobrar" style="font-weight:700;font-size:1rem;color:#7a420a">₡0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Búsqueda -->
+            <div class="card mb-3">
+                <div class="card-body py-2">
+                    <div class="row g-2 align-items-center">
+                        
+                        <div class="col-12 col-md-auto">
+                            <span style="font-weight:600;font-size:.9rem;">🔍 Buscar:</span>
+                        </div>
+
+                        <div class="col-12 col-md">
+                            <input id="buscar" class="form-control form-control-sm" 
+                                placeholder="Nombre, cliente o proveedor..." />
+                        </div>
+
+                        <div class="col-12 col-md-3">
+                            <select id="filtroProveedor" class="form-select form-select-sm">
+                                <option value="">Todos los proveedores</option>
                             </select>
                         </div>
-                        <div class="row g-2">
-                            <div class="col-6"><label class="form-label small">Precio Compra</label><input id="precioCompraEditar" type="number" class="form-control" step="0.01" required/></div>
-                            <div class="col-6"><label class="form-label small">Precio Venta sugerido</label><input id="precioVentaEditar" type="number" class="form-control" step="0.01" required/></div>
+
+                        <div class="col-12 col-md-auto">
+                            <button id="btnLimpiarFiltros" 
+                                class="btn btn-outline-danger btn-sm w-100">
+                                Limpiar
+                            </button>
                         </div>
-                        <div class="mb-2 mt-2"><label class="form-label small">Cantidad</label><input id="cantidadEditar" type="number" class="form-control" min="1" required/></div>
-                    </form>
+
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
-                    <button id="btnGuardarEdicion" class="btn btn-primary btn-compact">Guardar</button>
+            </div>
+
+            <!-- Tabla de ventas -->
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff">
+                    <h5 class="mb-0">💰 Mis Ventas</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <button id="btnCompartirWhatsApp" class="btn btn-compact" title="Compartir lista por WhatsApp" style="background:#25D366;color:#fff;font-size:.85rem">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:2px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </button>
+                        <button id="btnExportar" class="btn btn-warning btn-compact" title="Exportar CSV">📤</button>
+                        <button id="btnImportar" class="btn btn-compact" title="Importar CSV" style="background:#43f886">📥</button>
+                        <input type="file" id="inputImportar" accept=".csv" style="display:none"/>
+                        <button id="btnRecargar" class="btn btn-info btn-compact" title="Recargar datos">🔄</button>
+                        <button id="btnLimpiarTodo" class="btn btn-danger btn-compact" title="Limpiar todo">🗑</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr id="theadInv">
+                                    <th onclick="sortInv('#')" style="cursor:pointer;user-select:none"># <span id="sinv-#">⇅</span></th>
+                                    <th class="sticky-left" onclick="sortInv('nombre')" style="cursor:pointer;user-select:none">Producto <span id="sinv-nombre">⇅</span></th>
+                                    <th onclick="sortInv('proveedor')" style="cursor:pointer;user-select:none">Proveedor <span id="sinv-proveedor">⇅</span></th>
+                                    <th onclick="sortInv('cantidad')" style="cursor:pointer;user-select:none">Cant. <span id="sinv-cantidad">⇅</span></th>
+                                    <th onclick="sortInv('precioVenta')" style="cursor:pointer;user-select:none">Venta <span id="sinv-precioVenta">⇅</span></th>
+                                    <th onclick="sortInv('porc')" style="cursor:pointer;user-select:none">% <span id="sinv-porc">⇅</span></th>
+                                    <th onclick="sortInv('ganTotal')" style="cursor:pointer;user-select:none">Gan.Total <span id="sinv-ganTotal">⇅</span></th>
+                                    <th onclick="sortInv('pagado')" style="cursor:pointer;user-select:none">💰 Pagos <span id="sinv-pagado">⇅</span></th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTabla">
+                                <tr><td colspan="9" class="text-center text-muted">No hay productos registrados</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="modalEditarProv" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
-                    <h5 class="modal-title">✏️ Editar Producto Proveedor</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarProv">
-                        <input type="hidden" id="idEditarProv"/>
-                        <div class="mb-2"><label class="form-label small">Proveedor</label>
-                            <select id="proveedorEditarProv" class="form-select" required><option value="">Selecciona</option><option selected>Pura Vida</option><option>Pedro</option></select>
-                        </div>
-                        <div class="mb-2"><label class="form-label small">Nombre</label><input id="nombreEditarProv" class="form-control" required/></div>
-                        <div class="row g-2">
-                            <div class="col-6"><label class="form-label small">Precio Compra</label><input id="precioCompraEditarProv" type="number" class="form-control" step="0.01" required/></div>
-                            <div class="col-6"><label class="form-label small">Precio Sugerido</label><input id="precioVentaEditarProv" type="number" class="form-control" step="0.01"/></div>
-                        </div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
-                    <button id="btnGuardarEdicionProv" class="btn btn-primary btn-compact">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalUsarProducto" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2)); color:#fff">
-                    <h5 class="modal-title">➕ Agregar a Mi Inventario</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formUsarProducto">
-                        <input type="hidden" id="productoIdUsar"/>
-                        <div class="mb-2"><label class="form-label small">Producto</label><p id="productoNombreUsar" style="font-weight:700; margin:0">-</p></div>
-                        <div class="mb-2"><label class="form-label small">Proveedor</label><p id="productoProveedorUsar" style="margin:0; color:var(--muted)">-</p></div>
-                        <div class="mb-2"><label class="form-label small">Precio compra</label><p id="productoPrecioUsar" style="font-weight:700; color:var(--success); margin:0">₡0</p></div>
-                        <hr/>
-                        <div class="mb-2"><label class="form-label small">👤 Cliente</label><input id="clienteUsar" class="form-control" placeholder="Nombre del cliente (opcional)"/></div>
-                        <div class="row g-2">
-                            <div class="col-6"><label class="form-label small">Cantidad</label><input id="cantidadUsar" class="form-control" type="number" value="1" min="1" required/></div>
-                            <div class="col-6"><label class="form-label small">Precio venta sugerido</label><input id="precioVentaUsar" class="form-control" type="number" step="0.01" required/></div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
-                    <button id="btnConfirmarUsar" class="btn btn-success btn-compact">Agregar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Pagos -->
-    <div class="modal fade" id="modalPagos" tabindex="-1">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header" style="background:linear-gradient(135deg,#1a7f3c,#28a745); color:#fff">
-                    <h5 class="modal-title">💰 Pagos — <span id="pagosProductoNombre" style="font-weight:400; font-size:.95rem"></span></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Resumen -->
-                    <div class="row g-2 mb-3">
-                        <div class="col-4 text-center">
-                            <div style="font-size:.75rem; color:var(--muted)">Valor total</div>
-                            <div id="pagosValorTotal" style="font-weight:700; font-size:1rem; color:#111">₡0</div>
-                        </div>
-                        <div class="col-4 text-center">
-                            <div style="font-size:.75rem; color:var(--muted)">Pagado</div>
-                            <div id="pagosPagado" style="font-weight:700; font-size:1rem; color:var(--success)">₡0</div>
-                        </div>
-                        <div class="col-4 text-center">
-                            <div style="font-size:.75rem; color:var(--muted)">Restante</div>
-                            <div id="pagosRestante" style="font-weight:700; font-size:1rem; color:var(--danger)">₡0</div>
-                        </div>
-                    </div>
-                    <div class="pago-progress mb-3">
-                        <div id="pagosProgressBar" class="pago-progress-bar" style="width:0%"></div>
-                    </div>
-
-                    <!-- Registrar abono -->
-                    <div class="mb-3">
-                        <label class="form-label small mb-1 fw-semibold">💸 Registrar abono</label>
-                        <div class="d-flex gap-2">
-                            <input id="nuevoAbonoMonto" type="number" class="form-control" placeholder="Monto (₡)" min="1" step="1"/>
-                            <input id="nuevoAbonoNota" type="text" class="form-control" placeholder="Nota (opcional)"/>
-                            <button id="btnAgregarAbono" class="btn btn-success btn-compact" style="white-space:nowrap">+ Agregar</button>
-                        </div>
-                    </div>
-
-                    <!-- Historial de abonos -->
-                    <div style="font-size:.85rem; font-weight:600; color:#444; margin-bottom:.4rem">📋 Historial de abonos</div>
-                    <div id="listaAbonos">
-                        <div class="text-muted text-center" style="font-size:.88rem; padding:.6rem 0">Sin abonos registrados</div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap + App JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Variables globales (misma lógica que antes)
-        let productos = [];
-        let productosProveedor = [];
-        let idProducto = 1;
-        let idProductoProv = 1;
-
-        // Elementos
-        const formProducto = document.getElementById('formProducto');
-        const nombreProducto = document.getElementById('nombreProducto');
-        const proveedor = document.getElementById('proveedor');
-        const precioCompra = document.getElementById('precioCompra');
-        const precioVenta = document.getElementById('precioVenta');
-        const cantidad = document.getElementById('cantidad');
-        const cuerpoTabla = document.getElementById('cuerpoTabla');
-        const buscar = document.getElementById('buscar');
-        const filtroProveedor = document.getElementById('filtroProveedor');
-        const btnLimpiarFiltros = document.getElementById('btnLimpiarFiltros');
-        const btnExportar = document.getElementById('btnExportar');
-        const btnImportar = document.getElementById('btnImportar');
-        const inputImportar = document.getElementById('inputImportar');
-        const btnRecargar = document.getElementById('btnRecargar');
-        const btnLimpiarTodo = document.getElementById('btnLimpiarTodo');
-        const listaProductosMobile = document.getElementById('listaProductosMobile');
-
-        const formProductoProveedor = document.getElementById('formProductoProveedor');
-        const proveedorProd = document.getElementById('proveedorProd');
-        const nombreProductoProv = document.getElementById('nombreProductoProv');
-        const precioCostoProv = document.getElementById('precioCostoProv');
-        const precioVentaProv = document.getElementById('precioVentaProv');
-        
-        const cuerpoTablaProveedor = document.getElementById('cuerpoTablaProveedor');
-        const buscarProv = document.getElementById('buscarProv');
-        const filtroProveedorProv = document.getElementById('filtroProveedorProv');
-        const btnLimpiarFiltrosProv = document.getElementById('btnLimpiarFiltrosProv');
-        const btnExportarProv = document.getElementById('btnExportarProv');
-        const btnImportarProv = document.getElementById('btnImportarProv');
-        const inputImportarProv = document.getElementById('inputImportarProv');
-        const btnRecargarProv = document.getElementById('btnRecargarProv');
-        const btnLimpiarTodoProv = document.getElementById('btnLimpiarTodoProv');
-        const listaProductosProveedorMobile = document.getElementById('listaProductosProveedorMobile');
-
-        // Modales y botones
-        const modalEditar = new bootstrap.Modal(document.getElementById('modalEditar'));
-        const modalEditarProv = new bootstrap.Modal(document.getElementById('modalEditarProv'));
-        const modalUsarProducto = new bootstrap.Modal(document.getElementById('modalUsarProducto'));
-        const modalPagos = new bootstrap.Modal(document.getElementById('modalPagos'));
-        const btnGuardarEdicion = document.getElementById('btnGuardarEdicion');
-        const btnGuardarEdicionProv = document.getElementById('btnGuardarEdicionProv');
-        const btnConfirmarUsar = document.getElementById('btnConfirmarUsar');
-
-        // =========== PAGOS ===========
-        let pagosData = {}; // { productoId: [ {monto, nota, fecha} ] }
-        let pagoProductoActivoId = null;
-
-        // Formato colones
-        function formatoColones(numero){
-            return Number(numero).toLocaleString('es-CR',{minimumFractionDigits:0, maximumFractionDigits:0});
-        }
-
-        // cargar/guardar
-        function cargarDatos(){
-            const d = localStorage.getItem('productos');
-            const p = localStorage.getItem('productosProveedor');
-            const idP = localStorage.getItem('idProducto');
-            const idProv = localStorage.getItem('idProductoProv');
-            const pg = localStorage.getItem('pagosData');
-            if(d){ try { productos = JSON.parse(d) || []; } catch(e){ productos = []; } idProducto = parseInt(idP) || (productos.length? productos[productos.length-1].id + 1:1); }
-            if(p){ try { productosProveedor = JSON.parse(p) || []; } catch(e){ productosProveedor = []; } idProductoProv = parseInt(idProv) || (productosProveedor.length? productosProveedor[productosProveedor.length-1].id + 1:1); }
-            if(pg){ try { pagosData = JSON.parse(pg) || {}; } catch(e){ pagosData = {}; } }
-        }
-        function guardarDatos(){ localStorage.setItem('productos', JSON.stringify(productos)); localStorage.setItem('productosProveedor', JSON.stringify(productosProveedor)); localStorage.setItem('idProducto', String(idProducto)); localStorage.setItem('idProductoProv', String(idProductoProv)); localStorage.setItem('pagosData', JSON.stringify(pagosData)); }
-
-        // Inicial
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarDatos();
-            actualizarDashboard();
-            renderizarTablas();
-            window.addEventListener('resize', () => { aplicarFiltros(); aplicarFiltrosProv(); });
-        });
-
-        // Agregar producto (inventario)
-        formProducto && formProducto.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!nombreProducto.value.trim() || !proveedor.value || !precioCompra.value || !precioVenta.value || !cantidad.value) { alert('Completa todos los campos'); return; }
-            const nuevo = { id: idProducto++, nombre: nombreProducto.value.trim(), proveedor: proveedor.value, precioCompra: parseFloat(precioCompra.value), precioVenta: parseFloat(precioVenta.value), cantidad: parseInt(cantidad.value) };
-            productos.push(nuevo); guardarDatos(); formProducto.reset(); cantidad.value='1'; actualizarDashboard(); renderizarTablas(); alert('✅ Agregado');
-        });
-
-        // Renderizado adaptativo (tabla + mobile cards) - mobile cards disabled to avoid duplicates
-        function renderizarTablas(filteredProd = null, filteredProv = null){
-            renderizarTabla(filteredProd || productos);
-            renderizarTablaProveedor(filteredProv || productosProveedor);
-        }
-
-        function renderizarTabla(list = productos){
-            // tabla (visible en móvil y desktop)
-            if(!Array.isArray(list) || list.length===0){
-                cuerpoTabla.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No hay productos registrados</td></tr>';
-            } else {
-                cuerpoTabla.innerHTML = list.map((p, i) => {
-                    const rowNum = i + 1; // siempre 1,2,3... según posición visible
-                    const ganUnidad = p.precioVenta - p.precioCompra;
-                    const porc = (ganUnidad / p.precioCompra * 100).toFixed(2);
-                    const ganTotal = ganUnidad * p.cantidad;
-                    const cls = ganUnidad >= 0 ? 'gain-positive' : 'gain-negative';
-                    // Pagos
-                    const abonos = pagosData[p.id] || [];
-                    const totalPagado = abonos.reduce((s,a)=>s+a.monto,0);
-                    const valorTotal = p.precioVenta * p.cantidad;
-                    const restante = valorTotal - totalPagado;
-                    const pct = valorTotal > 0 ? Math.min(100, (totalPagado/valorTotal*100)) : 0;
-                    let badgeHtml, barCls;
-                    if(pct >= 100){ badgeHtml='<span class="badge-pagado">✅ Pagado</span>'; barCls=''; }
-                    else if(pct > 0){ badgeHtml='<span class="badge-pendiente">⏳ Parcial</span>'; barCls=' warning'; }
-                    else { badgeHtml='<span class="badge-sin-pago">❌ Sin pago</span>'; barCls=' danger'; }
-                    return `<tr>
-                        <td>${rowNum}</td>
-                        <td class="sticky-left">
-                            <a href="https://www.google.com/search?q=${encodeURIComponent(p.nombre + ' site:essenzaperfumes.cr')}" target="_blank">
-                                <strong>${p.nombre}</strong>
-                            </a>${p.cliente ? '<br><span style="font-size:.78rem; color:#fff; background:#0d9488; border-radius:5px; padding:.1rem .35rem; font-weight:600; display:inline-block; margin-top:.18rem;">👤 ' + p.cliente + '</span>' : ''}
-                        </td>
-                        <td><span class="badge bg-info badge-small">${p.cantidad}</span></td>
-                        <td>₡${formatoColones(p.precioVenta)}</td>
-                        <td class="${cls}">${porc}%</td>
-                        <td class="${cls}">₡${formatoColones(ganTotal)}</td>
-                        <td>
-                            <div style="min-width:110px">
-                                ${badgeHtml}
-                                <div class="pago-progress"><div class="pago-progress-bar${barCls}" style="width:${pct.toFixed(1)}%"></div></div>
-                                <div style="font-size:.76rem; color:var(--muted); margin-top:2px">₡${formatoColones(restante)} pendiente</div>
+        <!-- ===== PROVEEDORES ===== -->
+        <div class="tab-pane fade" id="productos-proveedor" role="tabpanel">
+            <div class="row g-2 mb-3">
+                <div class="col-12 col-lg-8">
+                    <div class="card">
+                        <div class="card-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff">
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                                <h5 class="mb-0">📦 Registrar Producto del Proveedor</h5>
+                                <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegistrarProv">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
                             </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-success" onclick="abrirPagos(${p.id})" title="Pagos">💰</button>
-                            <button class="btn btn-sm btn-warning" onclick="abrirEditar(${p.id})">✏️</button>
-                            <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${p.id})">🗑️</button>
-                        </td>
-                    </tr>`;
-                }).join('');
-            }
-
-            // NO generamos tarjetas móviles para evitar duplicados — dejamos el contenedor vacío
-            if (listaProductosMobile) listaProductosMobile.innerHTML = '';
-        }
-
-        // Renderizado de proveedores actualizado (incluye Gan./u, %, Gan.Total)
-        function renderizarTablaProveedor(list = productosProveedor){
-            if(!Array.isArray(list) || list.length===0){
-                cuerpoTablaProveedor.innerHTML = '<tr><td colspan="10" class="text-center text-muted">No hay productos registrados</td></tr>';
-            } else {
-                cuerpoTablaProveedor.innerHTML = list.map((p, i) => {
-                    const rowNum = i + 1; // siempre 1,2,3... según posición visible
-                    const precioCompraRaw = Number(p.precioCompra || 0);
-                    const venta = Number(p.precioVentaSugerido || 0);
-                    const tieneVenta = venta > 0;
-                    const ganUnidad = tieneVenta ? (venta - precioCompraRaw) : 0;
-                    const porc = (precioCompraRaw && tieneVenta) ? ((ganUnidad / precioCompraRaw) * 100).toFixed(2) : '0.00';
-                    const ganTotal = tieneVenta ? ganUnidad : 0;
-                    const cls = tieneVenta && ganUnidad >= 0 ? 'gain-positive' : 'gain-negative';
-                    return `<tr>
-                        <td>${rowNum}</td>
-                        <td><strong>${p.proveedor}</strong></td>
-                        <td class="sticky-left">
-                            <a href="https://www.google.com/search?q=${encodeURIComponent(p.nombre + ' site:essenzaperfumes.cr')}" target="_blank">
-                                <strong>${p.nombre}</strong>
-                            </a>
-                            <br><span class="d-inline-block d-md-none" style="font-size:.78rem; color:#fff; background:var(--primary-2); border-radius:5px; padding:.1rem .35rem; font-weight:600; margin-top:.18rem;">📦 ${p.proveedor}</span>
-                        </td>
-                        <td>₡${formatoColones(precioCompraRaw)}</td>
-                        <td>${tieneVenta ? '₡'+formatoColones(venta) : '-'}</td>
-                        <td class="${tieneVenta ? cls : ''}">${tieneVenta ? '₡'+formatoColones(ganUnidad) : '-'}</td>
-                        <td class="${tieneVenta ? cls : ''}">${tieneVenta ? porc+'%' : '-'}</td>
-                        <td class="${tieneVenta ? cls : ''}">${tieneVenta ? '₡'+formatoColones(ganTotal) : '-'}</td>
-                        <td>
-                            <button class="btn btn-sm btn-success" onclick="abrirUsarProducto(${p.id})">➕ Usar</button>
-                            <button class="btn btn-sm btn-warning" onclick="abrirEditarProv(${p.id})">✏️</button>
-                            <button class="btn btn-sm btn-danger" onclick="eliminarProductoProv(${p.id})">🗑️</button>
-                        </td>
-                    </tr>`;
-                }).join('');
-            }
-
-            // NO generamos tarjetas móviles para evitar duplicados — dejamos el contenedor vacío
-            if (listaProductosProveedorMobile) listaProductosProveedorMobile.innerHTML = '';
-        }
-
-        function abrirEditar(id){
-            const p = productos.find(x=>x.id===id);
-            if(!p) return;
-            document.getElementById('idEditar').value = p.id;
-            document.getElementById('nombreEditar').value = p.nombre;
-            document.getElementById('proveedorEditar').value = p.proveedor;
-            document.getElementById('precioCompraEditar').value = p.precioCompra;
-            document.getElementById('precioVentaEditar').value = p.precioVenta;
-            document.getElementById('cantidadEditar').value = p.cantidad;
-            modalEditar.show();
-        }
-        document.getElementById('btnGuardarEdicion').addEventListener('click', () => {
-            const id = parseInt(document.getElementById('idEditar').value);
-            const p = productos.find(x=>x.id===id);
-            if(p){
-                p.nombre = document.getElementById('nombreEditar').value.trim();
-                p.proveedor = document.getElementById('proveedorEditar').value;
-                p.precioCompra = parseFloat(document.getElementById('precioCompraEditar').value);
-                p.precioVenta = parseFloat(document.getElementById('precioVentaEditar').value);
-                p.cantidad = parseInt(document.getElementById('cantidadEditar').value);
-                guardarDatos(); actualizarDashboard(); renderizarTablas(); modalEditar.hide(); alert('✅ Actualizado');
-            }
-        });
-
-        function eliminarProducto(id){
-            if(confirm('¿Eliminar este producto?')){
-                productos = productos.filter(p=>p.id!==id); guardarDatos(); actualizarDashboard(); renderizarTablas(); alert('✅ Eliminado');
-            }
-        }
-
-        function actualizarDashboard(){
-            const total = productos.reduce((s,p)=>s + (p.cantidad||0),0);
-            const inversion = productos.reduce((s,p)=>s + ((p.precioCompra||0)*p.cantidad||0),0);
-            const valorVenta = productos.reduce((s,p)=>s + ((p.precioVenta||0)*p.cantidad||0),0);
-            const gananciaTotal = valorVenta - inversion;
-            // Pagos
-            const totalCobrado = productos.reduce((s,p)=>{ const abonos = pagosData[p.id]||[]; return s + abonos.reduce((a,b)=>a+b.monto,0); },0);
-            const totalPorCobrar = Math.max(0, valorVenta - totalCobrado);
-            document.getElementById('totalProductos').textContent = total;
-            document.getElementById('inversionTotal').textContent = '₡' + formatoColones(inversion);
-            document.getElementById('valorVenta').textContent = '₡' + formatoColones(valorVenta);
-            document.getElementById('gananciaTotal').textContent = '₡' + formatoColones(gananciaTotal);
-            document.getElementById('totalCobrado') && (document.getElementById('totalCobrado').textContent = '₡' + formatoColones(totalCobrado));
-            document.getElementById('totalPorCobrar') && (document.getElementById('totalPorCobrar').textContent = '₡' + formatoColones(totalPorCobrar));
-        }
-
-        // Filtros inventario
-        filtroProveedor && filtroProveedor.addEventListener('change', aplicarFiltros);
-        buscar && buscar.addEventListener('input', aplicarFiltros);
-
-        function aplicarFiltros(){
-            let res = productos.slice();
-            const q = (buscar.value || '').toLowerCase().trim();
-            if(q) res = res.filter(p => p.nombre.toLowerCase().includes(q));
-            const prov = filtroProveedor.value;
-            if(prov) res = res.filter(p => p.proveedor === prov);
-            renderizarTabla(res);
-        }
-
-        btnLimpiarFiltros && btnLimpiarFiltros.addEventListener('click', () => { if(buscar) buscar.value=''; if(filtroProveedor) filtroProveedor.value=''; renderizarTablas(); });
-
-        // -------------------------
-        // Mejora exportación CSV
-        // -------------------------
-        // Helpers para CSV (escapado RFC4180 y descarga con BOM para Sheets)
-        function csvEscape(value) {
-            if (value === null || value === undefined) return '';
-            const s = String(value);
-            if (s.includes('"') || s.includes(',') || s.includes('\n') || s.includes('\r')) {
-                return '"' + s.replace(/"/g, '""') + '"';
-            }
-            return s;
-        }
-
-        function downloadCsv(filename, content) {
-            // Añadimos BOM para asegurar que Google Sheets/Excel detecten UTF-8 correctamente
-            const bom = '\uFEFF';
-            const blob = new Blob([bom + content], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Export inventario - formato amigable para Google Sheets (CRLF, números sin separadores)
-        btnExportar && btnExportar.addEventListener('click', () => {
-            if (!productos.length) { alert('No hay productos'); return; }
-
-            const headers = ['Producto', 'Proveedor', 'Cantidad', 'PrecioCompra', 'PrecioVenta', 'GananciaUnidad', '%Ganancia', 'GananciaTotal'];
-            const rows = [];
-            rows.push(headers.join(','));
-
-            productos.forEach(p => {
-                const precioCompraRaw = Number(p.precioCompra || 0);
-                const precioVentaRaw = Number(p.precioVenta || 0);
-                const cantidadRaw = Number(p.cantidad || 0);
-                const ganUnidad = precioVentaRaw - precioCompraRaw;
-                const porc = precioCompraRaw ? ((ganUnidad / precioCompraRaw) * 100).toFixed(2) : '0.00';
-                const ganTotal = ganUnidad * cantidadRaw;
-
-                const row = [
-                    csvEscape(p.nombre),
-                    csvEscape(p.proveedor),
-                    csvEscape(cantidadRaw),
-                    csvEscape(precioCompraRaw),
-                    csvEscape(precioVentaRaw),
-                    csvEscape(ganUnidad.toFixed(2)),
-                    csvEscape(porc),
-                    csvEscape(ganTotal.toFixed(2))
-                ].join(',');
-                rows.push(row);
-            });
-
-            const csv = rows.join('\r\n');
-            const filename = 'inventario_' + new Date().toISOString().slice(0,10) + '.csv';
-            downloadCsv(filename, csv);
-        });
-
-        // Import inventario desde CSV
-        btnImportar && btnImportar.addEventListener('click', () => inputImportar.click());
-        inputImportar && inputImportar.addEventListener('change', (e) => {
-            const file = e.target.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                try {
-                    const text = ev.target.result.replace(/^\uFEFF/, ''); // quitar BOM
-                    const lines = text.split(/\r?\n/).filter(l => l.trim());
-                    if(lines.length < 2){ alert('CSV vacío o sin datos'); return; }
-                    const header = lines[0].split(',').map(h => h.trim().toLowerCase());
-                    // Columnas esperadas: Producto,Proveedor,Cantidad,PrecioCompra,PrecioVenta,...
-                    const iNombre = header.indexOf('producto');
-                    const iProveedor = header.indexOf('proveedor');
-                    const iCantidad = header.indexOf('cantidad');
-                    const iCompra = header.indexOf('preciocompra');
-                    const iVenta = header.indexOf('precioventa');
-                    if(iNombre<0 || iProveedor<0 || iCantidad<0 || iCompra<0 || iVenta<0){
-                        alert('El CSV no tiene las columnas esperadas.\nNecesitas: Producto, Proveedor, Cantidad, PrecioCompra, PrecioVenta'); return;
-                    }
-                    const importados = [];
-                    for(let i=1; i<lines.length; i++){
-                        const cols = lines[i].split(',');
-                        const nombre = (cols[iNombre]||'').replace(/^"|"$/g,'').trim();
-                        if(!nombre) continue;
-                        importados.push({
-                            id: idProducto++,
-                            nombre,
-                            proveedor: (cols[iProveedor]||'').replace(/^"|"$/g,'').trim(),
-                            cantidad: parseInt(cols[iCantidad]) || 1,
-                            precioCompra: parseFloat(cols[iCompra]) || 0,
-                            precioVenta: parseFloat(cols[iVenta]) || 0
-                        });
-                    }
-                    if(!importados.length){ alert('No se encontraron filas válidas'); return; }
-                    if(confirm(`¿Importar ${importados.length} producto(s)? Se agregarán a los existentes.`)){
-                        productos = productos.concat(importados);
-                        guardarDatos(); actualizarDashboard(); renderizarTablas();
-                                            }
-                } catch(err){ alert('Error al leer el CSV: ' + err.message); }
-                inputImportar.value = '';
-            };
-            reader.readAsText(file, 'UTF-8');
-        });
-
-
-        btnRecargar && btnRecargar.addEventListener('click', () => {
-            cargarDatos();
-            actualizarDashboard();
-            renderizarTablas();
-            
-        });
-
-        btnLimpiarTodo && btnLimpiarTodo.addEventListener('click', () => {
-            if(confirm('¿Eliminar TODOS los productos?')){
-                productos=[]; idProducto=1; guardarDatos(); actualizarDashboard(); renderizarTablas();
-            }
-        });
-
-        // ========== PROVEEDORES ==========
-        formProductoProveedor && formProductoProveedor.addEventListener('submit', (e)=>{
-            e.preventDefault();
-            if(!proveedorProd.value || !nombreProductoProv.value.trim() || !precioCostoProv.value){ alert('Completa'); return; }
-            const nuevo = { id: idProductoProv++, proveedor: proveedorProd.value, nombre: nombreProductoProv.value.trim(), precioCompra: parseFloat(precioCostoProv.value), precioVentaSugerido: parseFloat(precioVentaProv.value) || 0 };
-            productosProveedor.push(nuevo); guardarDatos(); formProductoProveedor.reset(); renderizarTablas();
-        });
-
-        function abrirUsarProducto(id){
-            const p = productosProveedor.find(x=>x.id===id); if(!p) return;
-            document.getElementById('productoIdUsar').value = p.id;
-            document.getElementById('productoNombreUsar').textContent = p.nombre;
-            document.getElementById('productoProveedorUsar').textContent = p.proveedor;
-            document.getElementById('productoPrecioUsar').textContent = '₡' + formatoColones(p.precioCompra);
-            document.getElementById('cantidadUsar').value = '1';
-            document.getElementById('precioVentaUsar').value = p.precioVentaSugerido || '';
-            document.getElementById('clienteUsar').value = '';
-            modalUsarProducto.show();
-        }
-
-        btnConfirmarUsar && btnConfirmarUsar.addEventListener('click', () => {
-            const id = parseInt(document.getElementById('productoIdUsar').value);
-            const cant = parseInt(document.getElementById('cantidadUsar').value);
-            const pv = parseFloat(document.getElementById('precioVentaUsar').value);
-            const cliente = document.getElementById('clienteUsar').value.trim();
-            if(!cant || !pv){ alert('Completa'); return; }
-            const prov = productosProveedor.find(x=>x.id===id); if(!prov) return;
-            const nuevo = { id: idProducto++, nombre: prov.nombre, proveedor: prov.proveedor, precioCompra: prov.precioCompra, precioVenta: pv, cantidad: cant, cliente };
-            productos.push(nuevo); guardarDatos(); actualizarDashboard(); renderizarTablas(); modalUsarProducto.hide();
-        });
-
-        function abrirEditarProv(id){
-            const p = productosProveedor.find(x=>x.id===id); if(!p) return;
-            document.getElementById('idEditarProv').value = p.id;
-            document.getElementById('proveedorEditarProv').value = p.proveedor;
-            document.getElementById('nombreEditarProv').value = p.nombre;
-            document.getElementById('precioCompraEditarProv').value = p.precioCompra;
-            document.getElementById('precioVentaEditarProv').value = p.precioVentaSugerido;
-            modalEditarProv.show();
-        }
-
-        btnGuardarEdicionProv && btnGuardarEdicionProv.addEventListener('click', () => {
-            const id = parseInt(document.getElementById('idEditarProv').value);
-            const p = productosProveedor.find(x=>x.id===id); if(p){
-                p.proveedor = document.getElementById('proveedorEditarProv').value;
-                p.nombre = document.getElementById('nombreEditarProv').value.trim();
-                p.precioCompra = parseFloat(document.getElementById('precioCompraEditarProv').value);
-                p.precioVentaSugerido = parseFloat(document.getElementById('precioVentaEditarProv').value) || 0;
-                guardarDatos(); renderizarTablas(); modalEditarProv.hide();            }
-        });
-
-        function eliminarProductoProv(id){
-            if(confirm('¿Eliminar este producto proveedor?')){ productosProveedor = productosProveedor.filter(p=>p.id!==id); guardarDatos(); renderizarTablas(); }
-        }
-
-        // filtros proveedor
-        filtroProveedorProv && filtroProveedorProv.addEventListener('change', aplicarFiltrosProv);
-        buscarProv && buscarProv.addEventListener('input', aplicarFiltrosProv);
-
-        function aplicarFiltrosProv(){
-            let res = productosProveedor.slice();
-            const q = (buscarProv.value||'').toLowerCase().trim();
-            if(q) res = res.filter(p => p.nombre.toLowerCase().includes(q));
-            const prov = filtroProveedorProv.value;
-            if(prov) res = res.filter(p => p.proveedor === prov);
-            renderizarTablaProveedor(res);
-        }
-
-        btnLimpiarFiltrosProv && btnLimpiarFiltrosProv.addEventListener('click', () => { if(buscarProv) buscarProv.value=''; if(filtroProveedorProv) filtroProveedorProv.value=''; renderizarTablas(); });
-
-        // Export proveedores mejorado (CRLF, BOM, escapado)
-        btnExportarProv && btnExportarProv.addEventListener('click', () => {
-            if (!productosProveedor.length) { return; }
-
-            const headers = ['Proveedor', 'Producto', 'PrecioCompra', 'PrecioVentaSugerido', 'GananciaUnidad', '%Ganancia', 'GananciaTotal'];
-            const rows = [];
-            rows.push(headers.join(','));
-
-            productosProveedor.forEach(p => {
-                const precioCompraRaw = Number(p.precioCompra || 0);
-                const precioSugeridoRaw = Number(p.precioVentaSugerido || 0);
-                const tieneVenta = precioSugeridoRaw > 0;
-                const ganUnidad = tieneVenta ? (precioSugeridoRaw - precioCompraRaw) : 0;
-                const porc = (precioCompraRaw && tieneVenta) ? ((ganUnidad / precioCompraRaw) * 100).toFixed(2) : '0.00';
-                const ganTotal = tieneVenta ? ganUnidad : 0;
-
-                const row = [
-                    csvEscape(p.proveedor),
-                    csvEscape(p.nombre),
-                    csvEscape(precioCompraRaw),
-                    csvEscape(precioSugeridoRaw),
-                    csvEscape(ganUnidad.toFixed(2)),
-                    csvEscape(porc),
-                    csvEscape(ganTotal.toFixed(2))
-                ].join(',');
-                rows.push(row);
-            });
-
-            const csv = rows.join('\r\n');
-            const filename = 'proveedores_' + new Date().toISOString().slice(0,10) + '.csv';
-            downloadCsv(filename, csv);
-        });
-
-        // Import proveedores desde CSV
-        btnImportarProv && btnImportarProv.addEventListener('click', () => inputImportarProv.click());
-        inputImportarProv && inputImportarProv.addEventListener('change', (e) => {
-            const file = e.target.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                try {
-                    const text = ev.target.result.replace(/^\uFEFF/, '');
-                    const lines = text.split(/\r?\n/).filter(l => l.trim());
-                    if(lines.length < 2){ alert('CSV vacío o sin datos'); return; }
-                    const header = lines[0].split(',').map(h => h.trim().toLowerCase());
-                    // Columnas esperadas: Proveedor,Producto,PrecioCompra,PrecioVentaSugerido,...
-                    const iProveedor = header.indexOf('proveedor');
-                    const iNombre = header.indexOf('producto');
-                    const iCompra = header.indexOf('preciocompra');
-                    const iSugerido = header.indexOf('precioventasugerido');
-                    if(iProveedor<0 || iNombre<0 || iCompra<0){
-                        alert('El CSV no tiene las columnas esperadas.\nNecesitas: Proveedor, Producto, PrecioCompra'); return;
-                    }
-                    const importados = [];
-                    for(let i=1; i<lines.length; i++){
-                        const cols = lines[i].split(',');
-                        const nombre = (cols[iNombre]||'').replace(/^"|"$/g,'').trim();
-                        if(!nombre) continue;
-                        importados.push({
-                            id: idProductoProv++,
-                            proveedor: (cols[iProveedor]||'').replace(/^"|"$/g,'').trim(),
-                            nombre,
-                            precioCompra: parseFloat(cols[iCompra]) || 0,
-                            precioVentaSugerido: iSugerido>=0 ? (parseFloat(cols[iSugerido]) || 0) : 0
-                        });
-                    }
-                    if(!importados.length){ alert('No se encontraron filas válidas'); return; }
-                    if(confirm(`¿Importar ${importados.length} producto(s) de proveedor? Se agregarán a los existentes.`)){
-                        productosProveedor = productosProveedor.concat(importados);
-                        guardarDatos(); renderizarTablas(); actualizarDashboard();
-                        alert(`✅ ${importados.length} producto(s) de proveedor importados`);
-                    }
-                } catch(err){ alert('Error al leer el CSV: ' + err.message); }
-                inputImportarProv.value = '';
-            };
-            reader.readAsText(file, 'UTF-8');
-        });
-
-        // Nuevo: recargar proveedores desde localStorage
-        btnRecargarProv && btnRecargarProv.addEventListener('click', () => {
-            cargarDatos();
-            renderizarTablas();
-            actualizarDashboard();
-            alert('✅ Datos de proveedores recargados desde localStorage');
-        });
-
-        btnLimpiarTodoProv && btnLimpiarTodoProv.addEventListener('click', () => {
-            if(confirm('¿Eliminar TODOS los productos de proveedores?')){ productosProveedor=[]; idProductoProv=1; guardarDatos(); renderizarTablas(); alert('✅ Todos eliminados'); }
-        });
-
-        // util: inicializar renderizado
-        function renderizarTablasOnLoad(){ actualizarDashboard(); renderizarTablas(); }
-        // ya invocado en DOMContentLoaded al inicio
-
-        // ========== SISTEMA DE PAGOS ==========
-        function abrirPagos(id){
-            const p = productos.find(x=>x.id===id); if(!p) return;
-            pagoProductoActivoId = id;
-            document.getElementById('pagosProductoNombre').textContent = p.nombre + (p.cliente ? ' - ' + p.cliente : '');
-            document.getElementById('nuevoAbonoMonto').value = '';
-            document.getElementById('nuevoAbonoNota').value = '';
-            actualizarResumenPagos(p);
-            renderizarAbonos(p);
-            modalPagos.show();
-        }
-
-        function actualizarResumenPagos(p){
-            const abonos = pagosData[p.id] || [];
-            const totalPagado = abonos.reduce((s,a)=>s+a.monto,0);
-            const valorTotal = p.precioVenta * p.cantidad;
-            const restante = Math.max(0, valorTotal - totalPagado);
-            const pct = valorTotal > 0 ? Math.min(100, (totalPagado/valorTotal*100)) : 0;
-            document.getElementById('pagosValorTotal').textContent = '₡' + formatoColones(valorTotal);
-            document.getElementById('pagosPagado').textContent = '₡' + formatoColones(totalPagado);
-            document.getElementById('pagosRestante').textContent = '₡' + formatoColones(restante);
-            const bar = document.getElementById('pagosProgressBar');
-            bar.style.width = pct.toFixed(1) + '%';
-            bar.className = 'pago-progress-bar' + (pct>=100 ? '' : pct>0 ? ' warning' : ' danger');
-            // Actualizar límite del input y botón
-            const inputMonto = document.getElementById('nuevoAbonoMonto');
-            const btnAgregar = document.getElementById('btnAgregarAbono');
-            inputMonto.max = restante;
-            inputMonto.placeholder = restante > 0 ? `Máx: ₡${formatoColones(restante)}` : 'Deuda saldada';
-            if(restante <= 0){
-                inputMonto.disabled = true;
-                document.getElementById('nuevoAbonoNota').disabled = true;
-                btnAgregar.disabled = true;
-                btnAgregar.textContent = '✅ Saldado';
-            } else {
-                inputMonto.disabled = false;
-                document.getElementById('nuevoAbonoNota').disabled = false;
-                btnAgregar.disabled = false;
-                btnAgregar.textContent = '+ Agregar';
-            }
-        }
-
-        function renderizarAbonos(p){
-            const abonos = pagosData[p.id] || [];
-            const lista = document.getElementById('listaAbonos');
-            if(!abonos.length){
-                lista.innerHTML = '<div class="text-muted text-center" style="font-size:.88rem; padding:.6rem 0">Sin abonos registrados</div>';
-                return;
-            }
-            lista.innerHTML = abonos.map((a,i)=>`
-                <div class="abono-item">
-                    <div>
-                        <div class="abono-monto">₡${formatoColones(a.monto)}</div>
-                        ${a.nota ? `<div style="font-size:.82rem; color:#555">${a.nota}</div>` : ''}
-                        <div class="abono-fecha">${a.fecha}</div>
+                        </div>
+                        <div id="collapseRegistrarProv" class="collapse">
+                            <div class="card-body">
+                                <form id="formProductoProveedor">
+                                    <div class="mb-2">
+                                        <label class="form-label small mb-1">Proveedor</label>
+                                        <select id="proveedorProd" class="form-select" required>
+                                            <option value="">Selecciona un proveedor</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small mb-1">Nombre</label>
+                                        <input id="nombreProductoProv" class="form-control" required/>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <label class="form-label small mb-1">Precio compra (₡)</label>
+                                            <input id="precioCostoProv" type="number" class="form-control" step="0.01" min="0" required/>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small mb-1">Precio venta sugerido (₡)</label>
+                                            <input id="precioVentaProv" class="form-control" type="number" step="0.01" min="0"/>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2 mt-2">
+                                        <button type="submit" class="btn btn-primary btn-compact w-100">Registrar</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-compact" onclick="document.getElementById('formProductoProveedor').reset()">Limpiar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-danger" style="padding:.2rem .45rem; font-size:.8rem" onclick="eliminarAbono(${p.id},${i})">🗑️</button>
-                </div>`).join('');
-        }
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                            <h5 class="mb-0">🔍 Filtrar Base</h5>
+                            <button class="toggle-small" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiltrarBD">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+                        <div id="collapseFiltrarBD" class="collapse">
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <label class="form-label small mb-1">Buscar</label>
+                                    <input id="buscarProv" class="form-control" placeholder="Nombre o proveedor..."/>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label small mb-1">Proveedor</label>
+                                    <select id="filtroProveedorProv" class="form-select">
+                                        <option value="">Todos</option>
+                                    </select>
+                                </div>
+                                <button id="btnLimpiarFiltrosProv" class="btn btn-outline-danger btn-compact w-100">Limpiar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        document.getElementById('btnAgregarAbono') && document.getElementById('btnAgregarAbono').addEventListener('click', ()=>{
-            const monto = parseFloat(document.getElementById('nuevoAbonoMonto').value);
-            const nota = document.getElementById('nuevoAbonoNota').value.trim();
-            if(!monto || monto <= 0){ alert('Ingresa un monto válido'); return; }
-            // Calcular restante actual
-            const p = productos.find(x=>x.id===pagoProductoActivoId);
-            const abonos = pagosData[pagoProductoActivoId] || [];
-            const totalPagado = abonos.reduce((s,a)=>s+a.monto,0);
-            const valorTotal = p.precioVenta * p.cantidad;
-            const restante = valorTotal - totalPagado;
-            if(monto > restante){
-                alert(`⚠️ El abono (₡${formatoColones(monto)}) supera el monto restante (₡${formatoColones(restante)}).\nIngresa un monto menor o igual a ₡${formatoColones(restante)}.`);
-                document.getElementById('nuevoAbonoMonto').value = '';
-                document.getElementById('nuevoAbonoMonto').focus();
-                return;
-            }
-            if(!pagosData[pagoProductoActivoId]) pagosData[pagoProductoActivoId] = [];
-            const fecha = new Date().toLocaleDateString('es-CR', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
-            pagosData[pagoProductoActivoId].push({ monto, nota, fecha });
-            guardarDatos();
-            actualizarResumenPagos(p);
-            renderizarAbonos(p);
-            renderizarTabla(productos);
-            actualizarDashboard();
-            document.getElementById('nuevoAbonoMonto').value='';
-            document.getElementById('nuevoAbonoNota').value='';
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff">
+                    <h5 class="mb-0">📦 Productos de Proveedores</h5>
+                    <div class="d-flex gap-2">
+                        <button id="btnExportarProv" class="btn btn-warning btn-compact" title="Exportar CSV">📤</button>
+                        <button id="btnImportarProv" class="btn btn-success btn-compact" title="Importar CSV" style="background:#43f886">📥</button>
+                        <input type="file" id="inputImportarProv" accept=".csv" style="display:none"/>
+                        <button id="btnRecargarProv" class="btn btn-info btn-compact" title="Recargar datos">🔄</button>
+                        <button id="btnLimpiarTodoProv" class="btn btn-danger btn-compact" title="Limpiar datos">🗑</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="table-dark">
+                                <tr id="theadProv">
+                                    <th onclick="sortProv('#')" style="cursor:pointer;user-select:none"># <span id="sort-#">⇅</span></th>
+                                    <th onclick="sortProv('proveedor')" style="cursor:pointer;user-select:none">Proveedor <span id="sort-proveedor">⇅</span></th>
+                                    <th class="sticky-left" onclick="sortProv('nombre')" style="cursor:pointer;user-select:none">Producto <span id="sort-nombre">⇅</span></th>
+                                    <th onclick="sortProv('precioCompra')" style="cursor:pointer;user-select:none">Compra <span id="sort-precioCompra">⇅</span></th>
+                                    <th onclick="sortProv('precioVentaSugerido')" style="cursor:pointer;user-select:none">Sugerido <span id="sort-precioVentaSugerido">⇅</span></th>
+                                    <th onclick="sortProv('ganUnidad')" style="cursor:pointer;user-select:none">Gan./u <span id="sort-ganUnidad">⇅</span></th>
+                                    <th onclick="sortProv('porc')" style="cursor:pointer;user-select:none">% <span id="sort-porc">⇅</span></th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTablaProveedor">
+                                <tr><td colspan="8" class="text-center text-muted">No hay productos registrados</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /tab-content -->
+</div><!-- /container -->
+
+<!-- ===== MODALES ===== -->
+
+<!-- Modal Editar Venta -->
+<div class="modal fade" id="modalEditar" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff">
+                <h5 class="modal-title">✏️ Editar Producto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="idEditar"/>
+                <div class="mb-2"><label class="form-label small">Nombre</label><input id="nombreEditar" class="form-control" required/></div>
+                <div class="mb-2"><label class="form-label small">Proveedor</label>
+                    <select id="proveedorEditar" class="form-select" required><option value="">Selecciona</option></select>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6"><label class="form-label small">Precio Compra</label><input id="precioCompraEditar" type="number" class="form-control" step="0.01" min="0" required/></div>
+                    <div class="col-6"><label class="form-label small">Precio Venta</label><input id="precioVentaEditar" type="number" class="form-control" step="0.01" min="0" required/></div>
+                </div>
+                <div class="mb-2 mt-2"><label class="form-label small">Cantidad</label><input id="cantidadEditar" type="number" class="form-control" min="1" required/></div>
+                <div class="mb-2"><label class="form-label small">Cliente</label><input id="clienteEditar" class="form-control" placeholder="Opcional"/></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btnGuardarEdicion" class="btn btn-primary btn-compact">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Proveedor -->
+<div class="modal fade" id="modalEditarProv" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff">
+                <h5 class="modal-title">✏️ Editar Producto Proveedor</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="idEditarProv"/>
+                <div class="mb-2"><label class="form-label small">Proveedor</label>
+                    <select id="proveedorEditarProv" class="form-select" required><option value="">Selecciona</option></select>
+                </div>
+                <div class="mb-2"><label class="form-label small">Nombre</label><input id="nombreEditarProv" class="form-control" required/></div>
+                <div class="row g-2">
+                    <div class="col-6"><label class="form-label small">Precio Compra</label><input id="precioCompraEditarProv" type="number" class="form-control" step="0.01" min="0" required/></div>
+                    <div class="col-6"><label class="form-label small">Precio Sugerido</label><input id="precioVentaEditarProv" type="number" class="form-control" step="0.01" min="0"/></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btnGuardarEdicionProv" class="btn btn-primary btn-compact">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar a Ventas -->
+<div class="modal fade" id="modalUsarProducto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff">
+                <h5 class="modal-title">💰 Agregar a Ventas</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="productoIdUsar"/>
+                <div class="mb-2"><label class="form-label small">Producto</label><p id="productoNombreUsar" style="font-weight:700;margin:0">-</p></div>
+                <div class="mb-2"><label class="form-label small">Proveedor</label><p id="productoProveedorUsar" style="margin:0;color:var(--muted)">-</p></div>
+                <div class="mb-2"><label class="form-label small">Precio compra</label><p id="productoPrecioUsar" style="font-weight:700;color:var(--success);margin:0">₡0</p></div>
+                <hr/>
+                <div class="mb-2"><label class="form-label small">👤 Cliente</label><input id="clienteUsar" class="form-control" placeholder="Nombre del cliente (opcional)"/></div>
+                <div class="row g-2">
+                    <div class="col-6"><label class="form-label small">Cantidad</label><input id="cantidadUsar" class="form-control" type="number" value="1" min="1" required/></div>
+                    <div class="col-6"><label class="form-label small">Precio venta (₡)</label><input id="precioVentaUsar" class="form-control" type="number" step="0.01" min="0" required/></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btnConfirmarUsar" class="btn btn-success btn-compact">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Pagos -->
+<div class="modal fade" id="modalPagos" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" style="background:linear-gradient(135deg,#1a7f3c,#28a745);color:#fff">
+                <h5 class="modal-title">💰 Pagos — <span id="pagosProductoNombre" style="font-weight:400;font-size:.95rem"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2 mb-3">
+                    <div class="col-4 text-center">
+                        <div style="font-size:.75rem;color:var(--muted)">Valor total</div>
+                        <div id="pagosValorTotal" style="font-weight:700;font-size:1rem;color:#111">₡0</div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div style="font-size:.75rem;color:var(--muted)">Pagado</div>
+                        <div id="pagosPagado" style="font-weight:700;font-size:1rem;color:var(--success)">₡0</div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div style="font-size:.75rem;color:var(--muted)">Restante</div>
+                        <div id="pagosRestante" style="font-weight:700;font-size:1rem;color:var(--danger)">₡0</div>
+                    </div>
+                </div>
+                <div class="pago-progress mb-3"><div id="pagosProgressBar" class="pago-progress-bar" style="width:0%"></div></div>
+                <div class="mb-3">
+                    <label class="form-label small mb-1 fw-semibold">💸 Registrar abono</label>
+                    <div class="d-flex gap-2">
+                        <input id="nuevoAbonoMonto" type="number" class="form-control" placeholder="Monto (₡)" min="1" step="1"/>
+                        <input id="nuevoAbonoNota" type="text" class="form-control" placeholder="Nota (opcional)"/>
+                        <button id="btnAgregarAbono" class="btn btn-success btn-compact" style="white-space:nowrap">+ Agregar</button>
+                    </div>
+                </div>
+                <div style="font-size:.85rem;font-weight:600;color:#444;margin-bottom:.4rem">📋 Historial de abonos</div>
+                <div id="listaAbonos">
+                    <div class="text-muted text-center" style="font-size:.88rem;padding:.6rem 0">Sin abonos registrados</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar a Compra -->
+<div class="modal fade" id="modalAgregarCompra" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:linear-gradient(135deg,#1a7f3c,#28a745);color:#fff">
+                <h5 class="modal-title">🛒 Agregar a Compra</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2" style="font-weight:700" id="compraProductoNombre">-</p>
+                <label class="form-label small mb-1">Selecciona la compra destino</label>
+                <div id="listaComprasModal" style="max-height:260px;overflow-y:auto">
+                    <div class="text-muted text-center p-3">No hay compras creadas. Ve a la pestaña Compras.</div>
+                </div>
+                <div class="mt-3">
+                    <label class="form-label small mb-1">Cantidad</label>
+                    <input id="cantidadCompraModal" type="number" min="1" value="1" class="form-control"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-compact" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btnConfirmarAgregarCompra" class="btn btn-success btn-compact">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+'use strict';
+/* ================================================================
+   CONSTANTES Y CONFIGURACIÓN
+   ================================================================ */
+// Lista de proveedores centralizada — editar aquí para añadir/quitar
+const PROVEEDORES = ['Pura Vida', 'Pedro'];
+
+// Claves de localStorage (v2 — nueva estructura)
+const LS = {
+    productos:          'emq_v2_productos',
+    productosProveedor: 'emq_v2_productosProveedor',
+    compras:            'emq_v2_compras',
+    pagosData:          'emq_v2_pagosData',
+    meta:               'emq_v2_meta'
+};
+
+/* ================================================================
+   ESTADO GLOBAL
+   ================================================================ */
+let productos          = [];   // Ventas/inventario activo
+let productosProveedor = [];   // Catálogo de proveedores
+let compras            = [];   // Órdenes de compra
+let pagosData          = {};   // { productoId: [{monto, nota, fecha}] }
+let idProducto         = 1;
+let idProductoProv     = 1;
+let idCompra           = 1;
+let compraActivaId     = null;
+let compraProductoProvId = null;
+let compraModalSeleccionadaId = null;
+let pagoProductoActivoId = null;
+
+// Sort state
+let sortInvCol = null, sortInvDir = 1;
+let sortProvCol = null, sortProvDir = 1;
+
+/* ================================================================
+   UTILIDADES GENERALES
+   ================================================================ */
+
+/** Escapa HTML para prevenir XSS */
+function esc(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/** Formato colones costarricenses */
+function fmt(n) {
+    return Number(n).toLocaleString('es-CR', {minimumFractionDigits:0, maximumFractionDigits:0});
+}
+
+/** Debounce — evita llamadas repetidas en eventos rápidos */
+function debounce(fn, ms) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+
+/** Toast no bloqueante (reemplaza alert para mensajes de éxito/info) */
+function toast(msg, tipo = 'success') {
+    const c = document.getElementById('toastContainer');
+    const el = document.createElement('div');
+    el.className = 'toast-msg ' + tipo;
+    el.textContent = msg;
+    c.appendChild(el);
+    requestAnimationFrame(() => { el.classList.add('show'); });
+    setTimeout(() => {
+        el.classList.remove('show');
+        setTimeout(() => el.remove(), 300);
+    }, 2800);
+}
+
+/** Parser CSV robusto RFC-4180 — maneja campos con comas y comillas */
+function parseCsvLine(line) {
+    const result = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+            if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+            else inQ = !inQ;
+        } else if (ch === ',' && !inQ) { result.push(cur); cur = ''; }
+        else cur += ch;
+    }
+    result.push(cur);
+    return result;
+}
+
+function csvEscape(v) {
+    if (v == null) return '';
+    const s = String(v);
+    if (s.includes('"') || s.includes(',') || s.includes('\n') || s.includes('\r'))
+        return '"' + s.replace(/"/g, '""') + '"';
+    return s;
+}
+
+function downloadCsv(filename, content) {
+    const blob = new Blob(['\uFEFF' + content], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+/* ================================================================
+   PERSISTENCIA — localStorage v2
+   ================================================================ */
+
+/**
+ * MIGRACIÓN AUTOMÁTICA desde estructura v1 (claves antiguas).
+ * Ejecuta solo una vez; después las claves v1 quedan huérfanas.
+ */
+function migrarDesdeV1() {
+    const yaHayV2 = localStorage.getItem(LS.meta);
+    if (yaHayV2) return; // ya migrado
+
+    const mapeo = [
+        ['productos',          LS.productos],
+        ['productosProveedor', LS.productosProveedor],
+        ['compras',            LS.compras],
+        ['pagosData',          LS.pagosData],
+    ];
+
+    let migrado = false;
+    mapeo.forEach(([viejaKey, nuevaKey]) => {
+        const val = localStorage.getItem(viejaKey);
+        if (val && !localStorage.getItem(nuevaKey)) {
+            localStorage.setItem(nuevaKey, val);
+            migrado = true;
+        }
+    });
+
+    // Guardar marca de migración
+    localStorage.setItem(LS.meta, JSON.stringify({
+        version: 2,
+        migradoEn: new Date().toISOString(),
+        fuenteV1: migrado
+    }));
+
+    if (migrado) {
+        console.info('[MARROQUÍ] Datos migrados de v1 → v2');
+    }
+}
+
+/** Valida y normaliza un producto de ventas */
+function validarProducto(p) {
+    return {
+        id:           Number(p.id)           || 0,
+        nombre:       String(p.nombre        || '').trim(),
+        proveedor:    String(p.proveedor     || '').trim(),
+        precioCompra: Number(p.precioCompra  || 0),
+        precioVenta:  Number(p.precioVenta   || 0),
+        cantidad:     Math.max(1, parseInt(p.cantidad) || 1),
+        cliente:      String(p.cliente       || '').trim(),
+    };
+}
+
+/** Valida y normaliza un producto de proveedor */
+function validarProductoProv(p) {
+    return {
+        id:                 Number(p.id)                     || 0,
+        proveedor:          String(p.proveedor               || '').trim(),
+        nombre:             String(p.nombre                  || '').trim(),
+        precioCompra:       Number(p.precioCompra            || 0),
+        precioVentaSugerido:Number(p.precioVentaSugerido     || 0),
+    };
+}
+
+function leerLS(clave, fallback) {
+    try {
+        const raw = localStorage.getItem(clave);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        return parsed != null ? parsed : fallback;
+    } catch(e) {
+        console.warn('[MARROQUÍ] Error leyendo ' + clave, e);
+        return fallback;
+    }
+}
+
+function cargarDatos() {
+    migrarDesdeV1();
+
+    productos          = (leerLS(LS.productos, [])          ).map(validarProducto);
+    productosProveedor = (leerLS(LS.productosProveedor, []) ).map(validarProductoProv);
+    pagosData          = leerLS(LS.pagosData, {});
+
+    // Recalcular IDs seguros para evitar reutilización
+    const maxProdId  = productos.length          ? Math.max(...productos.map(x=>x.id))          : 0;
+    const maxPagosId = Object.keys(pagosData).length ? Math.max(...Object.keys(pagosData).map(Number)) : 0;
+    idProducto = Math.max(maxProdId, maxPagosId) + 1;
+
+    const maxProvId = productosProveedor.length ? Math.max(...productosProveedor.map(x=>x.id)) : 0;
+    idProductoProv = maxProvId + 1;
+}
+
+function cargarCompras() {
+    const raw = leerLS(LS.compras, []);
+    compras = Array.isArray(raw) ? raw : [];
+    const maxId = compras.length ? Math.max(...compras.map(c=>c.id||0)) : 0;
+    idCompra = maxId + 1;
+}
+
+function guardarDatos() {
+    try {
+        // Guardar en un snapshot atómico-simulado: primero backup, luego datos nuevos
+        const backup = {
+            productos:          localStorage.getItem(LS.productos),
+            productosProveedor: localStorage.getItem(LS.productosProveedor),
+            pagosData:          localStorage.getItem(LS.pagosData),
+        };
+
+        localStorage.setItem(LS.productos,          JSON.stringify(productos));
+        localStorage.setItem(LS.productosProveedor, JSON.stringify(productosProveedor));
+        localStorage.setItem(LS.pagosData,          JSON.stringify(pagosData));
+
+        // Actualizar timestamp topbar
+        const ts = new Date().toLocaleTimeString('es-CR', {hour:'2-digit',minute:'2-digit'});
+        const el = document.getElementById('ultimoGuardado');
+        if (el) el.textContent = '💾 Guardado ' + ts;
+    } catch(e) {
+        toast('⚠️ Error al guardar datos: ' + e.message, 'danger');
+        console.error('[MARROQUÍ] Error guardarDatos:', e);
+    }
+}
+
+function guardarCompras() {
+    try {
+        localStorage.setItem(LS.compras, JSON.stringify(compras));
+    } catch(e) {
+        toast('⚠️ Error al guardar compras: ' + e.message, 'danger');
+    }
+}
+
+/* ================================================================
+   PROVEEDORES — Selects dinámicos
+   ================================================================ */
+
+/** Llena todos los <select> de proveedor con la lista centralizada */
+function poblarSelects() {
+    const ids = ['proveedorProd','proveedorEditar','proveedorEditarProv',
+                 'filtroProveedor','filtroProveedorProv'];
+    ids.forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        const esFiltro = id.startsWith('filtro');
+        const valorActual = sel.value;
+        // Mantener opción vacía
+        sel.innerHTML = esFiltro
+            ? '<option value="">Todos</option>'
+            : '<option value="">Selecciona</option>';
+        PROVEEDORES.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = opt.textContent = p;
+            sel.appendChild(opt);
         });
+        // Restaurar valor previo si aplica
+        if (valorActual) sel.value = valorActual;
+    });
+}
 
-        function eliminarAbono(productoId, index){
-            if(!confirm('¿Eliminar este abono?')) return;
-            if(pagosData[productoId]){ pagosData[productoId].splice(index,1); guardarDatos(); }
-            const p = productos.find(x=>x.id===productoId);
-            actualizarResumenPagos(p);
-            renderizarAbonos(p);
-            renderizarTabla(productos);
-        }
+/* ================================================================
+   DASHBOARD
+   ================================================================ */
+function actualizarDashboard() {
+    const total       = productos.reduce((s,p) => s + (p.cantidad||0), 0);
+    const inversion   = productos.reduce((s,p) => s + (p.precioCompra||0) * (p.cantidad||0), 0);
+    const valorVenta  = productos.reduce((s,p) => s + (p.precioVenta||0)  * (p.cantidad||0), 0);
+    const ganancia    = valorVenta - inversion;
+    const totalCobrado   = productos.reduce((s,p) => {
+        const abs = pagosData[p.id] || [];
+        return s + abs.reduce((a,b) => a + b.monto, 0);
+    }, 0);
+    const totalPorCobrar = Math.max(0, valorVenta - totalCobrado);
 
-        // ========== COMPARTIR POR WHATSAPP ==========
-        function compartirWhatsApp(){
-            if(!productos.length){
-                alert('No hay productos para compartir.');
-                return;
+    setText('totalProductos',  total);
+    setText('inversionTotal',  '₡' + fmt(inversion));
+    setText('valorVenta',      '₡' + fmt(valorVenta));
+    setText('gananciaTotal',   '₡' + fmt(ganancia));
+    setText('totalCobrado',    '₡' + fmt(totalCobrado));
+    setText('totalPorCobrar',  '₡' + fmt(totalPorCobrar));
+}
+
+function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+}
+
+/* ================================================================
+   RENDERIZADO — VENTAS
+   ================================================================ */
+function renderizarTabla(list) {
+    if (list === undefined) list = productos;
+    const tbody = document.getElementById('cuerpoTabla');
+    if (!tbody) return;
+    if (!Array.isArray(list) || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">No hay productos registrados</td></tr>';
+        return;
+    }
+    tbody.innerHTML = list.map((p, i) => {
+        const ganUnidad  = p.precioVenta - p.precioCompra;
+        const porc       = p.precioCompra ? (ganUnidad / p.precioCompra * 100).toFixed(2) : '0.00';
+        const ganTotal   = ganUnidad * p.cantidad;  // FIX: multiplicar por cantidad
+        const cls        = ganUnidad >= 0 ? 'gain-positive' : 'gain-negative';
+
+        const abonos     = pagosData[p.id] || [];
+        const pagado     = abonos.reduce((s,a) => s + a.monto, 0);
+        const valorTotal = p.precioVenta * p.cantidad;
+        const restante   = valorTotal - pagado;
+        const pct        = valorTotal > 0 ? Math.min(100, pagado / valorTotal * 100) : 0;
+
+        let badge, barCls;
+        if (pct >= 100) { badge = '<span class="badge-pagado">✅ Pagado</span>';    barCls = ''; }
+        else if (pct > 0){ badge = '<span class="badge-pendiente">⏳ Parcial</span>'; barCls = ' warning'; }
+        else              { badge = '<span class="badge-sin-pago">❌ Sin pago</span>';  barCls = ' danger'; }
+
+        const clienteLabel = p.cliente
+            ? `<br><span style="font-size:.78rem;color:#fff;background:#0d9488;border-radius:5px;padding:.1rem .35rem;font-weight:600;display:inline-block;margin-top:.18rem;">👤 ${esc(p.cliente)}</span>`
+            : '';
+
+        return `<tr>
+            <td>${i + 1}</td>
+            <td class="sticky-left">
+                <a href="https://www.google.com/search?q=${encodeURIComponent(p.nombre + ' site:essenzaperfumes.cr')}" target="_blank" rel="noopener">
+                    <strong>${esc(p.nombre)}</strong>
+                </a>${clienteLabel}
+            </td>
+            <td><span style="font-size:.8rem;color:#555">${esc(p.proveedor)||'-'}</span></td>
+            <td><span class="badge bg-info badge-small">${p.cantidad}</span></td>
+            <td>₡${fmt(p.precioVenta)}</td>
+            <td class="${cls}">${porc}%</td>
+            <td class="${cls}">₡${fmt(ganTotal)}</td>
+            <td>
+                <div style="min-width:110px">
+                    ${badge}
+                    <div class="pago-progress"><div class="pago-progress-bar${barCls}" style="width:${pct.toFixed(1)}%"></div></div>
+                    <div style="font-size:.76rem;color:var(--muted);margin-top:2px">₡${fmt(restante)} pendiente</div>
+                </div>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-success" onclick="abrirPagos(${p.id})" title="Pagos">💰</button>
+                <button class="btn btn-sm btn-warning" onclick="abrirEditar(${p.id})">✏️</button>
+                <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${p.id})">🗑️</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+/* ================================================================
+   RENDERIZADO — PROVEEDORES
+   ================================================================ */
+function renderizarTablaProveedor(list) {
+    if (list === undefined) list = productosProveedor;
+    const tbody = document.getElementById('cuerpoTablaProveedor');
+    if (!tbody) return;
+    if (!Array.isArray(list) || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No hay productos registrados</td></tr>';
+        return;
+    }
+    tbody.innerHTML = list.map((p, i) => {
+        const compra     = Number(p.precioCompra || 0);
+        const venta      = Number(p.precioVentaSugerido || 0);
+        const tieneVenta = venta > 0;
+        const ganUnidad  = tieneVenta ? venta - compra : 0;
+        const porc       = (compra && tieneVenta) ? (ganUnidad / compra * 100).toFixed(2) : '0.00';
+        const cls        = tieneVenta && ganUnidad >= 0 ? 'gain-positive' : 'gain-negative';
+
+        return `<tr>
+            <td>${i + 1}</td>
+            <td><strong>${esc(p.proveedor)}</strong></td>
+            <td class="sticky-left">
+                <a href="https://www.google.com/search?q=${encodeURIComponent(p.nombre + ' site:essenzaperfumes.cr')}" target="_blank" rel="noopener">
+                    <strong>${esc(p.nombre)}</strong>
+                </a>
+                <br><span class="d-inline-block d-md-none" style="font-size:.78rem;color:#fff;background:var(--primary-2);border-radius:5px;padding:.1rem .35rem;font-weight:600;margin-top:.18rem;">📦 ${esc(p.proveedor)}</span>
+            </td>
+            <td>₡${fmt(compra)}</td>
+            <td>${tieneVenta ? '₡'+fmt(venta) : '-'}</td>
+            <td class="${tieneVenta ? cls : ''}">${tieneVenta ? '₡'+fmt(ganUnidad) : '-'}</td>
+            <td class="${tieneVenta ? cls : ''}">${tieneVenta ? porc+'%' : '-'}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="abrirAgregarACompra(${p.id})" title="Agregar a una compra">🛒</button>
+                <button class="btn btn-sm btn-success" onclick="abrirUsarProducto(${p.id})" title="Agregar a Ventas">💰</button>
+                <button class="btn btn-sm btn-warning" onclick="abrirEditarProv(${p.id})">✏️</button>
+                <button class="btn btn-sm btn-danger" onclick="eliminarProductoProv(${p.id})">🗑️</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function renderizarTablas() {
+    renderizarTabla(productos);
+    renderizarTablaProveedor(productosProveedor);
+}
+
+/* ================================================================
+   FILTROS
+   ================================================================ */
+function aplicarFiltros() {
+    let res = productos.slice();
+    const q = (document.getElementById('buscar')?.value || '').toLowerCase().trim();
+    // FIX: búsqueda incluye proveedor además de nombre y cliente
+    if (q) res = res.filter(p =>
+        (p.nombre  ||'').toLowerCase().includes(q) ||
+        (p.cliente ||'').toLowerCase().includes(q) ||
+        (p.proveedor||'').toLowerCase().includes(q)
+    );
+    const prov = document.getElementById('filtroProveedor')?.value || '';
+    if (prov) res = res.filter(p => p.proveedor === prov);
+    renderizarTabla(res);
+}
+
+function aplicarFiltrosProv() {
+    let res = productosProveedor.slice();
+    const q = (document.getElementById('buscarProv')?.value || '').toLowerCase().trim();
+    if (q) res = res.filter(p =>
+        (p.nombre   ||'').toLowerCase().includes(q) ||
+        (p.proveedor||'').toLowerCase().includes(q)
+    );
+    const prov = document.getElementById('filtroProveedorProv')?.value || '';
+    if (prov) res = res.filter(p => p.proveedor === prov);
+    renderizarTablaProveedor(res);
+}
+
+/* ================================================================
+   CRUD — VENTAS
+   ================================================================ */
+function abrirEditar(id) {
+    const p = productos.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('idEditar').value         = p.id;
+    document.getElementById('nombreEditar').value     = p.nombre;
+    document.getElementById('proveedorEditar').value  = p.proveedor;
+    document.getElementById('precioCompraEditar').value = p.precioCompra;
+    document.getElementById('precioVentaEditar').value  = p.precioVenta;
+    document.getElementById('cantidadEditar').value   = p.cantidad;
+    document.getElementById('clienteEditar').value    = p.cliente || '';
+    modalEditar.show();
+}
+
+document.getElementById('btnGuardarEdicion').addEventListener('click', () => {
+    const id = parseInt(document.getElementById('idEditar').value);
+    const p  = productos.find(x => x.id === id);
+    if (!p) return;
+    const nombre = document.getElementById('nombreEditar').value.trim();
+    if (!nombre) { toast('El nombre no puede estar vacío', 'danger'); return; }
+    p.nombre       = nombre;
+    p.proveedor    = document.getElementById('proveedorEditar').value;
+    p.precioCompra = parseFloat(document.getElementById('precioCompraEditar').value) || 0;
+    p.precioVenta  = parseFloat(document.getElementById('precioVentaEditar').value)  || 0;
+    p.cantidad     = Math.max(1, parseInt(document.getElementById('cantidadEditar').value) || 1);
+    p.cliente      = document.getElementById('clienteEditar').value.trim();
+    guardarDatos(); actualizarDashboard(); renderizarTablas();
+    modalEditar.hide();
+    toast('✅ Producto actualizado');
+});
+
+function eliminarProducto(id) {
+    if (!confirm('¿Eliminar este producto de ventas?')) return;
+    productos = productos.filter(p => p.id !== id);
+    // FIX: NO tocar pagosData aquí — los datos históricos de pago se conservan
+    // Si se quiere limpiar explícitamente se puede hacer desde un menú de mantenimiento
+    guardarDatos(); actualizarDashboard(); renderizarTablas();
+    toast('🗑️ Producto eliminado');
+}
+
+/* ================================================================
+   CRUD — PROVEEDORES
+   ================================================================ */
+document.getElementById('formProductoProveedor').addEventListener('submit', e => {
+    e.preventDefault();
+    const proveedor = document.getElementById('proveedorProd').value;
+    const nombre    = document.getElementById('nombreProductoProv').value.trim();
+    const costo     = parseFloat(document.getElementById('precioCostoProv').value);
+    const sugerido  = parseFloat(document.getElementById('precioVentaProv').value) || 0;
+    if (!proveedor || !nombre || isNaN(costo) || costo < 0) {
+        toast('Completa todos los campos obligatorios', 'danger'); return;
+    }
+    productosProveedor.push({ id: idProductoProv++, proveedor, nombre, precioCompra: costo, precioVentaSugerido: sugerido });
+    guardarDatos();
+    document.getElementById('formProductoProveedor').reset();
+    renderizarTablaProveedor();
+    toast('✅ Producto proveedor registrado');
+});
+
+function abrirEditarProv(id) {
+    const p = productosProveedor.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('idEditarProv').value              = p.id;
+    document.getElementById('proveedorEditarProv').value       = p.proveedor;
+    document.getElementById('nombreEditarProv').value          = p.nombre;
+    document.getElementById('precioCompraEditarProv').value    = p.precioCompra;
+    document.getElementById('precioVentaEditarProv').value     = p.precioVentaSugerido || '';
+    modalEditarProv.show();
+}
+
+document.getElementById('btnGuardarEdicionProv').addEventListener('click', () => {
+    const id = parseInt(document.getElementById('idEditarProv').value);
+    const p  = productosProveedor.find(x => x.id === id);
+    if (!p) return;
+    p.proveedor          = document.getElementById('proveedorEditarProv').value;
+    p.nombre             = document.getElementById('nombreEditarProv').value.trim();
+    p.precioCompra       = parseFloat(document.getElementById('precioCompraEditarProv').value) || 0;
+    p.precioVentaSugerido= parseFloat(document.getElementById('precioVentaEditarProv').value)  || 0;
+    guardarDatos(); renderizarTablaProveedor();
+    modalEditarProv.hide();
+    toast('✅ Producto proveedor actualizado');
+});
+
+function eliminarProductoProv(id) {
+    if (!confirm('¿Eliminar este producto de la base de proveedores?')) return;
+    productosProveedor = productosProveedor.filter(p => p.id !== id);
+    guardarDatos(); renderizarTablaProveedor();
+    toast('🗑️ Eliminado');
+}
+
+/* ================================================================
+   AGREGAR A VENTAS (desde proveedor)
+   ================================================================ */
+function abrirUsarProducto(id) {
+    const p = productosProveedor.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('productoIdUsar').value      = p.id;
+    document.getElementById('productoNombreUsar').textContent   = p.nombre;
+    document.getElementById('productoProveedorUsar').textContent = p.proveedor;
+    document.getElementById('productoPrecioUsar').textContent   = '₡' + fmt(p.precioCompra);
+    document.getElementById('cantidadUsar').value        = '1';
+    document.getElementById('precioVentaUsar').value     = p.precioVentaSugerido || '';
+    document.getElementById('clienteUsar').value         = '';
+    modalUsarProducto.show();
+}
+
+document.getElementById('btnConfirmarUsar').addEventListener('click', () => {
+    const id      = parseInt(document.getElementById('productoIdUsar').value);
+    const cant    = Math.max(1, parseInt(document.getElementById('cantidadUsar').value) || 1);
+    const pv      = parseFloat(document.getElementById('precioVentaUsar').value);
+    const cliente = document.getElementById('clienteUsar').value.trim();
+    if (isNaN(pv) || pv < 0) { toast('Ingresa un precio de venta válido', 'danger'); return; }
+    const prov = productosProveedor.find(x => x.id === id);
+    if (!prov) return;
+    productos.push({
+        id: idProducto++, nombre: prov.nombre, proveedor: prov.proveedor,
+        precioCompra: prov.precioCompra, precioVenta: pv, cantidad: cant, cliente
+    });
+    guardarDatos(); actualizarDashboard(); renderizarTablas();
+    modalUsarProducto.hide();
+    toast('✅ Agregado a Ventas');
+});
+
+/* ================================================================
+   SISTEMA DE PAGOS
+   ================================================================ */
+function abrirPagos(id) {
+    const p = productos.find(x => x.id === id);
+    if (!p) return;
+    pagoProductoActivoId = id;
+    document.getElementById('pagosProductoNombre').textContent =
+        esc(p.nombre) + (p.cliente ? ' — ' + esc(p.cliente) : '');
+    document.getElementById('nuevoAbonoMonto').value = '';
+    document.getElementById('nuevoAbonoNota').value  = '';
+    actualizarResumenPagos(p);
+    renderizarAbonos(p);
+    modalPagos.show();
+}
+
+function actualizarResumenPagos(p) {
+    const abonos     = pagosData[p.id] || [];
+    const pagado     = abonos.reduce((s,a) => s + a.monto, 0);
+    const valorTotal = p.precioVenta * p.cantidad;
+    const restante   = Math.max(0, valorTotal - pagado);
+    const pct        = valorTotal > 0 ? Math.min(100, pagado / valorTotal * 100) : 0;
+
+    setText('pagosValorTotal', '₡' + fmt(valorTotal));
+    setText('pagosPagado',    '₡' + fmt(pagado));
+    setText('pagosRestante',  '₡' + fmt(restante));
+
+    const bar = document.getElementById('pagosProgressBar');
+    bar.style.width   = pct.toFixed(1) + '%';
+    bar.className     = 'pago-progress-bar' + (pct >= 100 ? '' : pct > 0 ? ' warning' : ' danger');
+
+    const inp = document.getElementById('nuevoAbonoMonto');
+    const btn = document.getElementById('btnAgregarAbono');
+    inp.max = restante;
+    inp.placeholder = restante > 0 ? `Máx: ₡${fmt(restante)}` : 'Deuda saldada';
+    inp.disabled = restante <= 0;
+    document.getElementById('nuevoAbonoNota').disabled = restante <= 0;
+    btn.disabled     = restante <= 0;
+    btn.textContent  = restante <= 0 ? '✅ Saldado' : '+ Agregar';
+}
+
+function renderizarAbonos(p) {
+    const abonos = pagosData[p.id] || [];
+    const lista  = document.getElementById('listaAbonos');
+    if (!abonos.length) {
+        lista.innerHTML = '<div class="text-muted text-center" style="font-size:.88rem;padding:.6rem 0">Sin abonos registrados</div>';
+        return;
+    }
+    lista.innerHTML = abonos.map((a, i) => `
+        <div class="abono-item">
+            <div>
+                <div class="abono-monto">₡${fmt(a.monto)}</div>
+                ${a.nota ? `<div style="font-size:.82rem;color:#555">${esc(a.nota)}</div>` : ''}
+                <div class="abono-fecha">${esc(a.fecha)}</div>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" style="padding:.2rem .45rem;font-size:.8rem"
+                onclick="eliminarAbono(${p.id},${i})">🗑️</button>
+        </div>`).join('');
+}
+
+document.getElementById('btnAgregarAbono').addEventListener('click', () => {
+    const monto = parseFloat(document.getElementById('nuevoAbonoMonto').value);
+    const nota  = document.getElementById('nuevoAbonoNota').value.trim();
+    if (!monto || monto <= 0) { toast('Ingresa un monto válido', 'danger'); return; }
+
+    const p      = productos.find(x => x.id === pagoProductoActivoId);
+    if (!p) return;
+    const abonos     = pagosData[pagoProductoActivoId] || [];
+    const pagado     = abonos.reduce((s,a) => s + a.monto, 0);
+    const valorTotal = p.precioVenta * p.cantidad;
+    const restante   = valorTotal - pagado;
+
+    if (monto > restante) {
+        toast(`⚠️ El abono supera el restante (₡${fmt(restante)})`, 'danger');
+        document.getElementById('nuevoAbonoMonto').value = '';
+        document.getElementById('nuevoAbonoMonto').focus();
+        return;
+    }
+    if (!pagosData[pagoProductoActivoId]) pagosData[pagoProductoActivoId] = [];
+    const fecha = new Date().toLocaleDateString('es-CR', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    pagosData[pagoProductoActivoId].push({ monto, nota, fecha });
+    guardarDatos();
+    actualizarResumenPagos(p);
+    renderizarAbonos(p);
+    renderizarTabla(productos);
+    actualizarDashboard();
+    document.getElementById('nuevoAbonoMonto').value = '';
+    document.getElementById('nuevoAbonoNota').value  = '';
+});
+
+function eliminarAbono(productoId, index) {
+    if (!confirm('¿Eliminar este abono?')) return;
+    if (pagosData[productoId]) pagosData[productoId].splice(index, 1);
+    guardarDatos();
+    const p = productos.find(x => x.id === productoId);
+    if (p) { actualizarResumenPagos(p); renderizarAbonos(p); }
+    renderizarTabla(productos);
+    actualizarDashboard();
+}
+
+/* ================================================================
+   SORT — VENTAS
+   ================================================================ */
+function getInvSortValue(p, col) {
+    const compra    = Number(p.precioCompra || 0);
+    const venta     = Number(p.precioVenta  || 0);
+    const cant      = Number(p.cantidad     || 0);
+    const ganUnidad = venta - compra;
+    const porc      = compra ? ganUnidad / compra * 100 : 0;
+    const ganTotal  = ganUnidad * cant;  // FIX: con cantidad
+    const abonos    = pagosData[p.id] || [];
+    const pagado    = abonos.reduce((s,a) => s + a.monto, 0);
+    const restante  = venta * cant - pagado;
+    switch (col) {
+        case '#':        return p.id;
+        case 'porc':     return porc;
+        case 'ganTotal': return ganTotal;
+        case 'pagado':   return restante;
+        default: return typeof p[col] === 'number' ? p[col] : (p[col]||'').toString().toLowerCase();
+    }
+}
+
+function sortInv(col) {
+    sortInvDir = sortInvCol === col ? sortInvDir * -1 : 1;
+    sortInvCol = col;
+    ['#','nombre','proveedor','cantidad','precioVenta','porc','ganTotal','pagado'].forEach(c => {
+        const el = document.getElementById('sinv-' + c);
+        if (el) el.textContent = c === sortInvCol ? (sortInvDir === 1 ? '▲' : '▼') : '⇅';
+    });
+    const q    = (document.getElementById('buscar')?.value    || '').toLowerCase().trim();
+    const prov = document.getElementById('filtroProveedor')?.value || '';
+    let lista  = productos.slice();
+    if (q)    lista = lista.filter(p => (p.nombre||'').toLowerCase().includes(q) || (p.cliente||'').toLowerCase().includes(q) || (p.proveedor||'').toLowerCase().includes(q));
+    if (prov) lista = lista.filter(p => p.proveedor === prov);
+    lista.sort((a, b) => {
+        const va = getInvSortValue(a, col), vb = getInvSortValue(b, col);
+        return va < vb ? -sortInvDir : va > vb ? sortInvDir : 0;
+    });
+    renderizarTabla(lista);
+}
+
+/* ================================================================
+   SORT — PROVEEDORES
+   ================================================================ */
+function getProvSortValue(p, col) {
+    const compra    = Number(p.precioCompra || 0);
+    const venta     = Number(p.precioVentaSugerido || 0);
+    const tieneVenta= venta > 0;
+    const ganUnidad = tieneVenta ? venta - compra : 0;
+    const porc      = compra && tieneVenta ? ganUnidad / compra * 100 : 0;
+    switch (col) {
+        case '#':         return p.id;
+        case 'ganUnidad': return ganUnidad;
+        case 'porc':      return porc;
+        default: return typeof p[col] === 'number' ? p[col] : (p[col]||'').toString().toLowerCase();
+    }
+}
+
+function sortProv(col) {
+    sortProvDir = sortProvCol === col ? sortProvDir * -1 : 1;
+    sortProvCol = col;
+    ['#','proveedor','nombre','precioCompra','precioVentaSugerido','ganUnidad','porc'].forEach(c => {
+        const el = document.getElementById('sort-' + c);
+        if (el) el.textContent = c === sortProvCol ? (sortProvDir === 1 ? '▲' : '▼') : '⇅';
+    });
+    const q    = (document.getElementById('buscarProv')?.value || '').toLowerCase().trim();
+    const prov = document.getElementById('filtroProveedorProv')?.value || '';
+    let lista  = productosProveedor.slice();
+    if (q)    lista = lista.filter(p => (p.nombre||'').toLowerCase().includes(q) || (p.proveedor||'').toLowerCase().includes(q));
+    if (prov) lista = lista.filter(p => p.proveedor === prov);
+    lista.sort((a, b) => {
+        const va = getProvSortValue(a, col), vb = getProvSortValue(b, col);
+        return va < vb ? -sortProvDir : va > vb ? sortProvDir : 0;
+    });
+    renderizarTablaProveedor(lista);
+}
+
+/* ================================================================
+   EXPORT / IMPORT — VENTAS
+   ================================================================ */
+document.getElementById('btnExportar').addEventListener('click', () => {
+    if (!productos.length) { toast('No hay productos para exportar', 'info'); return; }
+    const headers = ['Producto','Proveedor','Cliente','Cantidad','PrecioCompra','PrecioVenta','GananciaUnidad','%Ganancia','GananciaTotal'];
+    const rows = [headers.join(',')];
+    productos.forEach(p => {
+        const compra   = Number(p.precioCompra || 0);
+        const venta    = Number(p.precioVenta  || 0);
+        const cant     = Number(p.cantidad     || 0);
+        const ganU     = venta - compra;
+        const porc     = compra ? (ganU / compra * 100).toFixed(2) : '0.00';
+        const ganTotal = (ganU * cant).toFixed(2);
+        rows.push([csvEscape(p.nombre),csvEscape(p.proveedor),csvEscape(p.cliente||''),
+                   cant, compra, venta, ganU.toFixed(2), porc, ganTotal].join(','));
+    });
+    downloadCsv('inventario_' + new Date().toISOString().slice(0,10) + '.csv', rows.join('\r\n'));
+});
+
+document.getElementById('btnImportar').addEventListener('click', () => document.getElementById('inputImportar').click());
+document.getElementById('inputImportar').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            const text  = ev.target.result.replace(/^\uFEFF/,'');
+            const lines = text.split(/\r?\n/).filter(l => l.trim());
+            if (lines.length < 2) { toast('CSV vacío o sin datos', 'danger'); return; }
+            const header   = parseCsvLine(lines[0]).map(h => h.trim().toLowerCase());
+            const iNombre  = header.indexOf('producto');
+            const iProv    = header.indexOf('proveedor');
+            const iCant    = header.indexOf('cantidad');
+            const iCompra  = header.indexOf('preciocompra');
+            const iVenta   = header.indexOf('precioventa');
+            const iCliente = header.indexOf('cliente');
+            if (iNombre < 0 || iProv < 0 || iCant < 0 || iCompra < 0 || iVenta < 0) {
+                toast('CSV sin las columnas esperadas: Producto, Proveedor, Cantidad, PrecioCompra, PrecioVenta', 'danger'); return;
             }
-            // Respetar filtros activos
-            const buscarVal = (document.getElementById('buscar')?.value || '').toLowerCase().trim();
-            const filtroProvVal = document.getElementById('filtroProveedor')?.value || '';
-            const lista = productos.filter(p => {
-                const matchBuscar = !buscarVal || p.nombre.toLowerCase().includes(buscarVal) || (p.cliente||'').toLowerCase().includes(buscarVal);
-                const matchProv = !filtroProvVal || p.proveedor === filtroProvVal;
-                return matchBuscar && matchProv;
-            });
-
-            if(!lista.length){
-                alert('No hay productos visibles con los filtros actuales.');
-                return;
+            const importados = [];
+            for (let i = 1; i < lines.length; i++) {
+                const cols   = parseCsvLine(lines[i]);
+                const nombre = (cols[iNombre]||'').trim();
+                if (!nombre) continue;
+                importados.push({
+                    id: idProducto++,
+                    nombre,
+                    proveedor:    (cols[iProv]   ||'').trim(),
+                    cliente:      iCliente >= 0 ? (cols[iCliente]||'').trim() : '',
+                    cantidad:     parseInt(cols[iCant])   || 1,
+                    precioCompra: parseFloat(cols[iCompra]) || 0,
+                    precioVenta:  parseFloat(cols[iVenta])  || 0,
+                });
             }
-
-            const lineas = lista.map(p => {
-                const nombre = p.nombre || 'Producto';
-                const cliente = p.cliente ? ` (${p.cliente})` : '';
-                const cantidad = p.cantidad || 1;
-                const precio = p.precioVenta ? `\u20a1${formatoColones(p.precioVenta)}` : '-';
-                return `${nombre}${cliente} - ${cantidad} x ${precio}`;
-            });
-
-            const texto = `*\ud83d\uded2 Mis Productos - EL MARROQU\u00cd Perfumes*\n\n` + lineas.join('\n');
-            const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
-            window.open(url, '_blank');
-        }
-
-        document.getElementById('btnCompartirWhatsApp')?.addEventListener('click', compartirWhatsApp);
-
-        // ========== SORT TABLA PROVEEDORES ==========
-        let sortProvCol = null;
-        let sortProvDir = 1;
-
-        function getProvSortValue(p, col){
-            const compra = Number(p.precioCompra || 0);
-            const venta = Number(p.precioVentaSugerido || 0);
-            const tieneVenta = venta > 0;
-            const ganUnidad = tieneVenta ? (venta - compra) : 0;
-            const porc = compra && tieneVenta ? (ganUnidad / compra) * 100 : 0;
-            const ganTotal = tieneVenta ? ganUnidad : 0;
-            switch(col){
-                case '#':        return p.id;           // orden de ingreso original
-                case 'ganUnidad': return ganUnidad;
-                case 'porc':     return porc;
-                case 'ganTotal': return ganTotal;
-                default: return typeof p[col] === 'number' ? p[col] : (p[col]||'').toString().toLowerCase();
+            if (!importados.length) { toast('No se encontraron filas válidas', 'danger'); return; }
+            if (confirm(`¿Importar ${importados.length} producto(s)? Se agregarán a los existentes.`)) {
+                productos = productos.concat(importados);
+                guardarDatos(); actualizarDashboard(); renderizarTablas();
+                toast(`✅ ${importados.length} productos importados`);
             }
-        }
+        } catch(err) { toast('Error al leer el CSV: ' + err.message, 'danger'); }
+        e.target.value = '';
+    };
+    reader.readAsText(file, 'UTF-8');
+});
 
-        function sortProv(col){
-            sortProvDir = (sortProvCol === col) ? sortProvDir * -1 : 1;
-            sortProvCol = col;
-            ['#','proveedor','nombre','precioCompra','precioVentaSugerido','ganUnidad','porc','ganTotal'].forEach(c => {
-                const el = document.getElementById('sort-'+c);
-                if(el) el.textContent = (c === sortProvCol) ? (sortProvDir === 1 ? '▲' : '▼') : '⇅';
-            });
-            const buscarVal = (document.getElementById('buscarProv')?.value || '').toLowerCase().trim();
-            const filtroVal = document.getElementById('filtroProveedorProv')?.value || '';
-            let lista = productosProveedor.slice();
-            if(buscarVal) lista = lista.filter(p => (p.nombre||'').toLowerCase().includes(buscarVal) || (p.proveedor||'').toLowerCase().includes(buscarVal));
-            if(filtroVal) lista = lista.filter(p => p.proveedor === filtroVal);
-            lista.sort((a, b) => {
-                const va = getProvSortValue(a, col);
-                const vb = getProvSortValue(b, col);
-                if(va < vb) return -1 * sortProvDir;
-                if(va > vb) return  1 * sortProvDir;
-                return 0;
-            });
-            renderizarTablaProveedor(lista);
-        }
+/* ================================================================
+   EXPORT / IMPORT — PROVEEDORES
+   ================================================================ */
+document.getElementById('btnExportarProv').addEventListener('click', () => {
+    if (!productosProveedor.length) { toast('No hay productos para exportar', 'info'); return; }
+    const headers = ['Proveedor','Producto','PrecioCompra','PrecioVentaSugerido','GananciaUnidad','%Ganancia'];
+    const rows = [headers.join(',')];
+    productosProveedor.forEach(p => {
+        const compra = Number(p.precioCompra || 0);
+        const venta  = Number(p.precioVentaSugerido || 0);
+        const ganU   = venta > 0 ? venta - compra : 0;
+        const porc   = (compra && venta > 0) ? (ganU / compra * 100).toFixed(2) : '0.00';
+        rows.push([csvEscape(p.proveedor), csvEscape(p.nombre),
+                   compra, venta, ganU.toFixed(2), porc].join(','));
+    });
+    downloadCsv('proveedores_' + new Date().toISOString().slice(0,10) + '.csv', rows.join('\r\n'));
+});
 
-        // ========== SORT TABLA INVENTARIO ==========
-        let sortInvCol = null;
-        let sortInvDir = 1;
-
-        function getInvSortValue(p, col){
-            const compra = Number(p.precioCompra || 0);
-            const venta = Number(p.precioVenta || 0);
-            const cantidad = Number(p.cantidad || 0);
-            const ganUnidad = venta - compra;
-            const porc = compra ? (ganUnidad / compra) * 100 : 0;
-            const ganTotal = ganUnidad * cantidad;
-            const abonos = pagosData[p.id] || [];
-            const totalPagado = abonos.reduce((s,a) => s + a.monto, 0);
-            const valorTotal = venta * cantidad;
-            const restante = valorTotal - totalPagado;
-            switch(col){
-                case '#':        return p.id;           // orden de ingreso original
-                case 'porc':     return porc;
-                case 'ganTotal': return ganTotal;
-                case 'pagado':   return restante;       // ordena por monto PENDIENTE
-                default: return typeof p[col] === 'number' ? p[col] : (p[col]||'').toString().toLowerCase();
+document.getElementById('btnImportarProv').addEventListener('click', () => document.getElementById('inputImportarProv').click());
+document.getElementById('inputImportarProv').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            const text  = ev.target.result.replace(/^\uFEFF/,'');
+            const lines = text.split(/\r?\n/).filter(l => l.trim());
+            if (lines.length < 2) { toast('CSV vacío o sin datos', 'danger'); return; }
+            const header   = parseCsvLine(lines[0]).map(h => h.trim().toLowerCase());
+            const iProv    = header.indexOf('proveedor');
+            const iNombre  = header.indexOf('producto');
+            const iCompra  = header.indexOf('preciocompra');
+            const iSuger   = header.indexOf('precioventasugerido');
+            if (iProv < 0 || iNombre < 0 || iCompra < 0) {
+                toast('CSV sin las columnas esperadas: Proveedor, Producto, PrecioCompra', 'danger'); return;
             }
-        }
+            const importados = [];
+            for (let i = 1; i < lines.length; i++) {
+                const cols   = parseCsvLine(lines[i]);
+                const nombre = (cols[iNombre]||'').trim();
+                if (!nombre) continue;
+                importados.push({
+                    id: idProductoProv++,
+                    proveedor:          (cols[iProv]||'').trim(),
+                    nombre,
+                    precioCompra:       parseFloat(cols[iCompra]) || 0,
+                    precioVentaSugerido:iSuger >= 0 ? (parseFloat(cols[iSuger]) || 0) : 0,
+                });
+            }
+            if (!importados.length) { toast('No se encontraron filas válidas', 'danger'); return; }
+            if (confirm(`¿Importar ${importados.length} producto(s) de proveedor?`)) {
+                productosProveedor = productosProveedor.concat(importados);
+                guardarDatos(); renderizarTablaProveedor(); actualizarDashboard();
+                toast(`✅ ${importados.length} productos de proveedor importados`);
+            }
+        } catch(err) { toast('Error al leer el CSV: ' + err.message, 'danger'); }
+        e.target.value = '';
+    };
+    reader.readAsText(file, 'UTF-8');
+});
 
-        function sortInv(col){
-            sortInvDir = (sortInvCol === col) ? sortInvDir * -1 : 1;
-            sortInvCol = col;
-            ['#','nombre','cantidad','precioVenta','porc','ganTotal','pagado'].forEach(c => {
-                const el = document.getElementById('sinv-'+c);
-                if(el) el.textContent = (c === sortInvCol) ? (sortInvDir === 1 ? '▲' : '▼') : '⇅';
+/* ================================================================
+   BOTONES RECARGAR / LIMPIAR
+   ================================================================ */
+document.getElementById('btnRecargar').addEventListener('click', () => {
+    cargarDatos(); cargarCompras(); actualizarDashboard(); renderizarTablas(); renderizarListaCompras();
+    toast('🔄 Datos recargados', 'info');
+});
+
+// FIX: limpiarTodo también limpia pagosData para evitar colisión de IDs
+document.getElementById('btnLimpiarTodo').addEventListener('click', () => {
+    if (!confirm('¿Eliminar TODOS los productos de ventas?\n\nEsta acción también eliminará los pagos asociados.')) return;
+    productos  = [];
+    pagosData  = {};
+    idProducto = 1;
+    guardarDatos(); actualizarDashboard(); renderizarTablas();
+    toast('🗑️ Ventas y pagos eliminados');
+});
+
+document.getElementById('btnLimpiarFiltros').addEventListener('click', () => {
+    const b = document.getElementById('buscar');
+    const f = document.getElementById('filtroProveedor');
+    if (b) b.value = '';
+    if (f) f.value = '';
+    renderizarTabla(productos);
+});
+
+document.getElementById('btnRecargarProv').addEventListener('click', () => {
+    cargarDatos(); renderizarTablaProveedor(); actualizarDashboard();
+    toast('🔄 Datos de proveedores recargados', 'info');
+});
+
+document.getElementById('btnLimpiarTodoProv').addEventListener('click', () => {
+    if (!confirm('¿Eliminar TODOS los productos de proveedores?')) return;
+    productosProveedor = []; idProductoProv = 1;
+    guardarDatos(); renderizarTablaProveedor();
+    toast('🗑️ Productos de proveedores eliminados');
+});
+
+document.getElementById('btnLimpiarFiltrosProv').addEventListener('click', () => {
+    const b = document.getElementById('buscarProv');
+    const f = document.getElementById('filtroProveedorProv');
+    if (b) b.value = '';
+    if (f) f.value = '';
+    renderizarTablaProveedor(productosProveedor);
+});
+
+/* ================================================================
+   COMPARTIR POR WHATSAPP
+   ================================================================ */
+document.getElementById('btnCompartirWhatsApp').addEventListener('click', () => {
+    if (!productos.length) { toast('No hay productos para compartir', 'info'); return; }
+    const q    = (document.getElementById('buscar')?.value    || '').toLowerCase().trim();
+    const prov = document.getElementById('filtroProveedor')?.value || '';
+    const lista = productos.filter(p => {
+        const mq  = !q    || (p.nombre||'').toLowerCase().includes(q) || (p.cliente||'').toLowerCase().includes(q) || (p.proveedor||'').toLowerCase().includes(q);
+        const mp  = !prov || p.proveedor === prov;
+        return mq && mp;
+    });
+    if (!lista.length) { toast('Sin productos visibles con los filtros actuales', 'info'); return; }
+    const lineas = lista.map(p => {
+        const cliente = p.cliente ? ` (${p.cliente})` : '';
+        const precio  = p.precioVenta ? `₡${fmt(p.precioVenta)}` : '-';
+        return `${p.nombre}${cliente} — ${p.cantidad} x ${precio}`;
+    });
+    const texto = `*🛒 Mis Productos - EL MARROQUÍ Perfumes*\n\n` + lineas.join('\n');
+    window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank');
+});
+
+/* ================================================================
+   COMPRAS — renderizado
+   ================================================================ */
+function generarFicha() { return 'CMP-' + String(idCompra).padStart(3,'0'); }
+
+function renderizarListaCompras() {
+    const cont = document.getElementById('listaCompras');
+    if (!cont) return;
+    if (!compras.length) {
+        cont.innerHTML = '<div class="text-muted text-center" style="padding:1rem;font-size:.9rem">Sin compras creadas</div>';
+        return;
+    }
+    cont.innerHTML = compras.slice().reverse().map(c => {
+        const isActive   = c.id === compraActivaId;
+        const totalItems = (c.items||[]).reduce((s,i) => s + i.cantidad, 0);
+        const totalCosto = (c.items||[]).reduce((s,i) => s + i.precioCompra * i.cantidad, 0);
+        // FIX: badge visual si la compra ya fue pasada a ventas
+        const procesadaBadge = c.procesada
+            ? '<span class="badge-procesada ms-1">✔ En ventas</span>' : '';
+        return `<div class="d-flex align-items-center justify-content-between p-2 mb-1 rounded"
+            style="cursor:pointer;background:${isActive?'#e8eeff':'#f6f8fb'};border:${isActive?'2px solid var(--primary-1)':'1px solid #e0e0e0'}"
+            onclick="seleccionarCompra(${c.id})">
+            <div style="min-width:0;flex:1">
+                <div style="font-weight:700;font-size:.95rem">${esc(c.nombre)}${procesadaBadge}</div>
+                <div style="font-size:.78rem;color:var(--muted)">${esc(c.ficha)} · ${esc(c.fecha)}</div>
+                <div style="font-size:.8rem;color:#444">${totalItems} uds · ₡${fmt(totalCosto)}</div>
+            </div>
+            <div class="d-flex gap-1 ms-1">
+                <button class="btn btn-sm btn-success" style="padding:.15rem .35rem;font-size:.75rem;white-space:nowrap"
+                    title="Pasar a Ventas" onclick="event.stopPropagation();pasarCompraAVentas(${c.id})">💰 Ventas</button>
+                <button class="btn btn-sm btn-outline-danger" style="padding:.15rem .35rem;font-size:.78rem"
+                    onclick="event.stopPropagation();eliminarCompra(${c.id})">🗑️</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderizarDetalleCompra(c) {
+    const cont = document.getElementById('detalleCompraActiva');
+    if (!c || !c.items || !c.items.length) {
+        cont.innerHTML = '<div class="text-muted text-center" style="padding:2rem;font-size:.9rem">Sin productos en esta compra.<br>Ve a <strong>Proveedores</strong> y usa el botón 🛒 Compra.</div>';
+        return;
+    }
+    const totalCosto = c.items.reduce((s,i) => s + i.precioCompra * i.cantidad, 0);
+    const totalItems = c.items.reduce((s,i) => s + i.cantidad, 0);
+    cont.innerHTML = `
+        <div class="d-flex gap-3 mb-2" style="font-size:.88rem;font-weight:600;color:#444">
+            <span>📦 ${totalItems} unidades</span>
+            <span>💸 Total: ₡${fmt(totalCosto)}</span>
+        </div>
+        <div class="table-responsive">
+        <table class="table table-sm table-striped" style="font-size:.88rem">
+            <thead class="table-dark"><tr>
+                <th>Producto</th><th>Proveedor</th><th>Cant.</th><th>P.Compra</th><th>Subtotal</th><th></th>
+            </tr></thead>
+            <tbody>
+            ${c.items.map((item, idx) => `<tr>
+                <td><strong>${esc(item.nombre)}</strong></td>
+                <td>${esc(item.proveedor)}</td>
+                <td><span class="badge bg-info">${item.cantidad}</span></td>
+                <td>₡${fmt(item.precioCompra)}</td>
+                <td>₡${fmt(item.precioCompra * item.cantidad)}</td>
+                <td><button class="btn btn-sm btn-outline-danger" style="padding:.1rem .3rem;font-size:.78rem"
+                    onclick="quitarItemCompra(${c.id},${idx})">🗑️</button></td>
+            </tr>`).join('')}
+            </tbody>
+        </table>
+        </div>`;
+}
+
+function seleccionarCompra(id) {
+    compraActivaId = id;
+    const c = compras.find(x => x.id === id);
+    if (!c) return;
+    setText('tituloCompraActiva', '🛒 ' + c.nombre);
+    setText('fichaCompraActiva',  c.ficha + ' · ' + c.fecha);
+    renderizarDetalleCompra(c);
+    renderizarListaCompras();
+}
+
+/* ================================================================
+   COMPRAS — CRUD
+   ================================================================ */
+document.getElementById('btnCrearCompra').addEventListener('click', () => {
+    const nombre = (document.getElementById('nombreNuevaCompra').value || '').trim();
+    if (!nombre) { toast('Ingresa un nombre para la compra', 'danger'); return; }
+    const ficha  = generarFicha();
+    const fecha  = new Date().toLocaleDateString('es-CR', {day:'2-digit',month:'short',year:'numeric'});
+    const nueva  = { id: idCompra++, nombre, ficha, fecha, items: [], procesada: false };
+    compras.push(nueva);
+    guardarCompras();
+    document.getElementById('nombreNuevaCompra').value = '';
+    renderizarListaCompras();
+    seleccionarCompra(nueva.id);
+    toast('✅ Compra creada: ' + ficha);
+});
+
+function eliminarCompra(id) {
+    if (!confirm('¿Eliminar esta compra?')) return;
+    compras = compras.filter(c => c.id !== id);
+    guardarCompras();
+    // FIX: limpiar estado activo correctamente
+    if (compraActivaId === id) {
+        compraActivaId = null;
+        setText('tituloCompraActiva', '🛒 Selecciona una compra');
+        setText('fichaCompraActiva', '');
+        const det = document.getElementById('detalleCompraActiva');
+        if (det) det.innerHTML = '<div class="text-muted text-center" style="padding:2rem;font-size:.9rem">👈 Selecciona una compra de la lista</div>';
+    }
+    renderizarListaCompras();
+    toast('🗑️ Compra eliminada');
+}
+
+function quitarItemCompra(compraId, idx) {
+    const c = compras.find(x => x.id === compraId);
+    if (!c) return;
+    c.items.splice(idx, 1);
+    guardarCompras();
+    renderizarDetalleCompra(c);
+    renderizarListaCompras();
+}
+
+/* ================================================================
+   COMPRAS — AGREGAR PRODUCTO A COMPRA
+   ================================================================ */
+function abrirAgregarACompra(provId) {
+    compraProductoProvId = provId;
+    const p = productosProveedor.find(x => x.id === provId);
+    if (!p) return;
+    setText('compraProductoNombre', p.nombre + ' — ₡' + fmt(p.precioCompra));
+    document.getElementById('cantidadCompraModal').value = '1';
+
+    const listaCont = document.getElementById('listaComprasModal');
+    if (!compras.length) {
+        listaCont.innerHTML = '<div class="text-muted text-center p-3">No hay compras. Crea una en la pestaña Compras.</div>';
+    } else {
+        listaCont.innerHTML = compras.slice().reverse().map(c => `
+            <div class="compra-item-modal d-flex align-items-center justify-content-between p-2 mb-1 rounded"
+                style="border:1px solid #ddd;cursor:pointer;background:${compraActivaId===c.id?'#e8eeff':'#fff'}"
+                onclick="seleccionarCompraModal(${c.id}, this)">
+                <div>
+                    <div style="font-weight:700;font-size:.92rem">${esc(c.nombre)}</div>
+                    <div style="font-size:.78rem;color:var(--muted)">${esc(c.ficha)} · ${esc(c.fecha)}</div>
+                </div>
+                <span style="font-size:1.2rem">${compraActivaId===c.id?'✅':''}</span>
+            </div>`).join('');
+    }
+    // FIX: pre-seleccionar compra activa si existe
+    compraModalSeleccionadaId = compraActivaId || null;
+    modalAgregarCompra.show();
+}
+
+function seleccionarCompraModal(id, el) {
+    compraModalSeleccionadaId = id;
+    document.querySelectorAll('.compra-item-modal').forEach(x => {
+        x.style.background = '#fff';
+        x.querySelector('span').textContent = '';
+    });
+    el.style.background = '#e8eeff';
+    el.querySelector('span').textContent = '✅';
+}
+
+document.getElementById('btnConfirmarAgregarCompra').addEventListener('click', () => {
+    if (!compraModalSeleccionadaId) { toast('Selecciona una compra', 'danger'); return; }
+    const cant = Math.max(1, parseInt(document.getElementById('cantidadCompraModal').value) || 1);
+    const p    = productosProveedor.find(x => x.id === compraProductoProvId);
+    if (!p) return;
+    const c = compras.find(x => x.id === compraModalSeleccionadaId);
+    if (!c) return;
+    // Acumular si ya existe el mismo producto en la compra
+    const existing = c.items.find(i => i.provId === p.id);
+    if (existing) { existing.cantidad += cant; }
+    else { c.items.push({ provId: p.id, nombre: p.nombre, proveedor: p.proveedor, precioCompra: p.precioCompra, precioVenta: p.precioVentaSugerido || 0, cantidad: cant }); }
+    guardarCompras();
+    modalAgregarCompra.hide();
+    compraModalSeleccionadaId = null;
+    if (compraActivaId === c.id) renderizarDetalleCompra(c);
+    renderizarListaCompras();
+    toast(`✅ ${cant} ud(s) de "${p.nombre}" agregadas a la compra`);
+});
+
+/* ================================================================
+   COMPRAS — PASAR A VENTAS
+   FIX: marca compra como procesada (no elimina) y advierte si ya fue procesada
+   ================================================================ */
+function pasarCompraAVentas(compraId) {
+    const c = compras.find(x => x.id === compraId);
+    if (!c) return;
+    if (!c.items || !c.items.length) { toast('Esta compra no tiene productos', 'danger'); return; }
+
+    // FIX: advertir si ya fue procesada antes
+    if (c.procesada) {
+        if (!confirm(`⚠️ Esta compra ya fue pasada a Ventas anteriormente.\n¿Deseas pasarla NUEVAMENTE y duplicar los registros?\n\nSi lo haces, se crearán entradas duplicadas en Ventas.`)) return;
+    }
+
+    const totalUnidades = c.items.reduce((s,i) => s + Number(i.cantidad||1), 0);
+    if (!confirm(`¿Pasar ${totalUnidades} unidad(es) de "${c.nombre}" a Ventas?\n\nCada unidad se creará como una fila independiente.`)) return;
+
+    c.items.forEach(item => {
+        const pCompra = Number(item.precioCompra || 0);
+        const pVenta  = Number(item.precioVenta  || item.precioVenta || pCompra);
+        const cant    = Number(item.cantidad || 1);
+        for (let i = 0; i < cant; i++) {
+            productos.push({
+                id: idProducto++, nombre: item.nombre, proveedor: item.proveedor,
+                precioCompra: pCompra, precioVenta: pVenta, cantidad: 1, cliente: ''
             });
-            const buscarVal = (document.getElementById('buscar')?.value || '').toLowerCase().trim();
-            const filtroVal = document.getElementById('filtroProveedor')?.value || '';
-            let lista = productos.slice();
-            if(buscarVal) lista = lista.filter(p => (p.nombre||'').toLowerCase().includes(buscarVal) || (p.cliente||'').toLowerCase().includes(buscarVal));
-            if(filtroVal) lista = lista.filter(p => p.proveedor === filtroVal);
-            lista.sort((a, b) => {
-                const va = getInvSortValue(a, col);
-                const vb = getInvSortValue(b, col);
-                if(va < vb) return -1 * sortInvDir;
-                if(va > vb) return  1 * sortInvDir;
-                return 0;
-            });
-            renderizarTabla(lista);
         }
-    </script>
+    });
+
+    // FIX: marcar como procesada para evitar duplicados accidentales
+    c.procesada = true;
+    guardarCompras();
+    guardarDatos();
+    actualizarDashboard();
+    renderizarTablas();
+    renderizarListaCompras();
+    toast(`✅ ${totalUnidades} unidad(es) agregadas a Ventas`);
+}
+
+/* ================================================================
+   INICIALIZACIÓN — DOMContentLoaded
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Cargar datos
+    cargarDatos();
+    cargarCompras();
+
+    // Poblar selects de proveedores (centralizado)
+    poblarSelects();
+
+    // Render inicial
+    actualizarDashboard();
+    renderizarTablas();
+    renderizarListaCompras();
+
+    // Modales Bootstrap
+    window.modalEditar          = new bootstrap.Modal(document.getElementById('modalEditar'));
+    window.modalEditarProv      = new bootstrap.Modal(document.getElementById('modalEditarProv'));
+    window.modalUsarProducto    = new bootstrap.Modal(document.getElementById('modalUsarProducto'));
+    window.modalPagos           = new bootstrap.Modal(document.getElementById('modalPagos'));
+    window.modalAgregarCompra   = new bootstrap.Modal(document.getElementById('modalAgregarCompra'));
+
+    // Filtros — con debounce en resize
+    document.getElementById('buscar')?.addEventListener('input', aplicarFiltros);
+    document.getElementById('filtroProveedor')?.addEventListener('change', aplicarFiltros);
+    document.getElementById('buscarProv')?.addEventListener('input', aplicarFiltrosProv);
+    document.getElementById('filtroProveedorProv')?.addEventListener('change', aplicarFiltrosProv);
+
+    // FIX: debounce en resize para evitar lag
+    window.addEventListener('resize', debounce(() => { aplicarFiltros(); aplicarFiltrosProv(); }, 200));
+});
+</script>
 </body>
 </html>
