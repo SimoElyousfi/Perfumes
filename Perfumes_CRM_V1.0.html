@@ -873,8 +873,8 @@ function renderizarTabla(list) {
     if (!Array.isArray(list) || list.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">No hay productos registrados</td></tr>';
         return;
-    }
-    tbody.innerHTML = list.map((p, i) => {
+    } 
+    tbody.innerHTML = list.slice().reverse().map((p, i) => {
         const ganUnidad  = p.precioVenta - p.precioCompra;
         const porc       = p.precioCompra ? (ganUnidad / p.precioCompra * 100).toFixed(2) : '0.00';
         const ganTotal   = ganUnidad * p.cantidad;  // FIX: multiplicar por cantidad
