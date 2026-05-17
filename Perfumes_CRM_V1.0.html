@@ -589,6 +589,38 @@ mark {
 /* Tab fade animation */
 .tab-pane { animation: fadeIn .2s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ========================================================
+   MOBILE TABLE SCROLL FIX
+   ======================================================== */
+@media(max-width: 767px) {
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+    }
+    .card { overflow: visible !important; }
+    .card-body.p-0 {
+        overflow: hidden;
+        border-radius: 0 0 var(--radius) var(--radius);
+    }
+    .sticky-left {
+        min-width: 90px !important;
+        max-width: 120px !important;
+        font-size: .82rem;
+    }
+    .btn-action-group {
+        display: flex;
+        gap: 3px;
+        flex-wrap: nowrap;
+    }
+    .btn-action-group .btn-xs {
+        padding: .18rem .32rem;
+        font-size: .72rem;
+        min-width: 28px;
+        justify-content: center;
+    }
+}
     </style>
 </head>
 <body>
@@ -1547,9 +1579,11 @@ function renderizarTabla(list) {
                 </div>
             </td>
             <td>
+                <div class="btn-action-group">
                 <button class="btn btn-sm btn-success btn-xs" onclick="abrirPagos(${p.id})" title="Pagos" aria-label="Abrir pagos de ${esc(p.nombre)}">💰</button>
                 <button class="btn btn-sm btn-warning btn-xs" onclick="abrirEditar(${p.id})" title="Editar" aria-label="Editar ${esc(p.nombre)}">✏️</button>
                 <button class="btn btn-sm btn-danger btn-xs"  onclick="eliminarProducto(${p.id})" title="Eliminar" aria-label="Eliminar ${esc(p.nombre)}">🗑️</button>
+                </div>
             </td>
         </tr>`;
     }).join('');
@@ -1598,10 +1632,12 @@ function renderizarTablaProveedor(list) {
             <td class="${tieneVenta ? cls : ''} hide-mobile">${tieneVenta ? '₡'+fmt(ganUnidad) : '-'}</td>
             <td class="${tieneVenta ? cls : ''}">${tieneVenta ? porc+'%' : '-'}</td>
             <td>
+                <div class="btn-action-group">
                 <button class="btn btn-sm btn-primary btn-xs"  onclick="abrirAgregarACompra(${p.id})" title="Agregar a compra">🛒</button>
                 <button class="btn btn-sm btn-success btn-xs"  onclick="abrirUsarProducto(${p.id})"   title="Agregar a ventas">💰</button>
                 <button class="btn btn-sm btn-warning btn-xs"  onclick="abrirEditarProv(${p.id})"      title="Editar">✏️</button>
                 <button class="btn btn-sm btn-danger btn-xs"   onclick="eliminarProductoProv(${p.id})" title="Eliminar">🗑️</button>
+                </div>
             </td>
         </tr>`;
     }).join('');
