@@ -172,7 +172,7 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
     margin-bottom: 12px;
-    overflow: hidden;
+    overflow: visible;
     transition: border-color var(--transition);
 }
 .card:hover { border-color: var(--border-2); }
@@ -196,6 +196,9 @@ body {
     border-bottom-color: rgba(34,197,94,.2);
 }
 .card-body { padding: .8rem .9rem; }
+
+/* Fix: tablas con scroll horizontal en mobile */
+.card-body.p-0 { overflow: hidden; border-radius: 0 0 var(--radius) var(--radius); }
 
 /* ========================================================
    DASHBOARD TILES
@@ -352,7 +355,7 @@ body {
 }
 .table-dark th:hover { color: var(--text); }
 .table td, .table th { white-space: nowrap; }
-.table-responsive { border-radius: var(--radius-sm); overflow: hidden; }
+.table-responsive { border-radius: var(--radius-sm); overflow-x: auto; overflow-y: visible; -webkit-overflow-scrolling: touch; }
 
 /* Sticky column */
 .sticky-left {
@@ -1121,7 +1124,7 @@ mark {
             <div class="modal-body">
                 <p class="mb-2" style="font-weight:700;color:var(--text)" id="compraProductoNombre">-</p>
                 <label class="form-label">Selecciona la compra destino</label>
-                <div id
+                <div id="listaComprasModal" style="max-height:240px;overflow-y:auto;margin-bottom:.75rem">
                     <div class="text-center" style="color:var(--text-dim);padding:1rem">No hay compras creadas.</div>
                 </div>
                 <label class="form-label" for="cantidadCompraModal">Cantidad</label>
